@@ -18,127 +18,109 @@
 
 ---
 
-### 🔍 SME Feedback from the Break Through Tech Evaluation Team
+## 📋 BTT Internal Evaluation Notes
+*(This section is for BTT staff and CAs only — remove before sharing with students)*
 
-*Challenge Advisor: Please address the following feedback by editing this page. Your AI Studio Coach can help make project adjustments as needed, too. In addition to the grey section above, this section should be removed before sharing the repo with your student team.*
+### Technical Vetting
+| Check | Status | Notes |
+| :--- | :--- | :--- |
+| Python Compatibility | 🟢 | The tech stack is centered on Python, using Python-compatible libraries for machine learning and data processing. |
+| Data Readiness | 🟢 | The IEEE-CIS Fraud Detection dataset is publicly available and appears ready for use, containing 590,000 transactions without significant preprocessing requirements indicated. |
+| Resource Check | 🟢 | Users can utilize Google Colab, which offers sufficient computing resources in its free tier without specialized hardware requirements. |
+
+### Internal Scores
+- **Student Fit Score:** 7/10
+- **Technical Depth Score:** 8/10
+- **Overall Recommendation:** REVISE
+
+### Advisor Feedback Draft
+The project has a clear application and relevant industry context, encouraging student engagement. However, the diversity of techniques may introduce confusion. Simplifying modeling options or focusing on a few key methods could improve clarity and success. Additionally, ensure that students are equipped with the skills to interpret model results effectively, as this is essential for real-world applications. Recommend providing workshops or resources on the specific ML libraries to be used.
 
 ---
 
-# [Project Title]
+# Online Payment Fraud Detection Using High-Dimensional Transaction Data
 
-**Company / Org:** [Company / Org Name]  
-**Challenge Advisor:** [Name, Title, Email]  
-**Program:** Break Through Tech AI Studio - Fall 2026
+**Company / Org:** Mastercard  
+**Challenge Advisor:** Debasmita Das, debasmita.das@iiml.org  
+**Program:** Break Through Tech AI Studio - Fall 2026  
 
 ---
 
-## 🏢 About [Company / Org Name]
-
-[2-3 sentences about your company: what you do, your industry, etc. You may also choose to specify your specific department or team.]
+## 🏢 About Mastercard
+Mastercard is a global leader in the payment technology industry, connecting billions of consumers, financial institutions, and merchants through innovative digital transaction solutions. The team objective is to leverage advanced analytics and machine learning to safeguard the global financial ecosystem by proactively identifying and mitigating sophisticated online payment fraud.
 
 ---
 
 ## 🎯 The Challenge
-
 ### Project Summary
-[In 2-3 sentences, describe what you're asking the team to do. Be specific about the type of data, ML techniques, and potential impact.]
-
-> **Example:** "In this project, your team will use customer transaction data and classification algorithms to build a model that predicts which users are likely to churn. This will help our retention team prioritize outreach."
+This project tasks students with developing a binary classification model to accurately distinguish between fraudulent and legitimate online transactions using high-dimensional data. By applying machine learning and deep learning techniques to the IEEE-CIS dataset, the team will aim to reduce financial losses and minimize customer friction in real-time. The final solution will demonstrate how data-driven insights can streamline manual review workloads for payment processors.
 
 ### Success Criteria
-[What does success look like? Describe evaluation metrics (accuracy, F1 score, etc.) or qualitative outcomes that would make this project valuable to your company.]
+AUPRC (primary), Fraud-class recall, Fraud-class precision, Fraud-class F1-score, False-positive rate, Recall at fixed false-positive rate, and ROC-AUC.
 
 ### Project Milestones
-
-Use these milestones to guide your work. Your team will create a **GitHub Projects board** to track tasks within each milestone.
-
+Use these milestones to guide your work. Your team will create a GitHub Projects board to track tasks within each milestone.
 | Month | Milestone | Key Activities |
 |-------|-----------|----------------|
-| **September** | [e.g., Data Understanding] | [e.g., Explore dataset, handle missing values, document findings] |
-| **October** | [e.g., Model Development] | [e.g., Train baseline model, experiment with approaches, iterate] |
-| **November** | [e.g., Evaluation & Presentation] | [e.g., Finalize model, prepare presentation, document results] |
+| **September** | Data Exploration & Preprocessing | Conducting exploratory data analysis (EDA), cleaning high-dimensional variables, and identifying anomalies/outliers. |
+| **October** | Feature Engineering & Baseline Modeling | Engineering transaction-based features and deploying standard baselines like Logistic Regression and Random Forest. |
+| **November** | Model Optimization & Evaluation | Tuning hyperparameters, implementing deep learning architectures, and conducting cross-validation assessments. |
+| **December** | Insights, Deliverables & Presentation | Developing interpretable model outputs, building a final prototype dashboard, and packaging the technical documentation. |
 
 > **Note for the team:** Please create a GitHub Projects board in this repository to break these milestones into weekly tasks. Go to the **Projects** tab → **New project** → Choose **Board** → Add columns for each month.
 
 ---
 
 ## 📊 Dataset
-
-**Name and Source:** [Dataset name and where it's from]  
-**Format:** [e.g., CSV, JSON, images]  
-**Size:** [Approximate size in MB/GB]  
-**Location:** [Link to dataset or instructions for accessing it]
+**Name and Source:** IEEE-CIS Fraud Detection Dataset (Kaggle)  
+**Format:** CSV/TSV  
+**Size:** 5gb to 10gb  
+**Location:** Accessible via Kaggle API or direct download.  
 
 ### Key Details
-- [Brief description of what's in the data]
-- [Any known limitations or preprocessing needed]
-- [Link to data dictionary or documentation, if available]
+- Publicly available IEEE-CIS Fraud Detection dataset from Kaggle. It contains approximately 590,000 transactions and 400+ variables (card, identity, device, etc.). Data is Numerical/Quantitative and Time Series in CSV/TSV format.
+- Teams must address extreme class imbalance and handle high-cardinality categorical variables while accounting for temporal data drift in the transaction logs.
 
 ---
 
 ## 🛠️ Suggested Approach
-
-**ML Problem Type:** [e.g., Classification, Regression, NLP, Computer Vision, LLM/RAG]
-
+**ML Problem Type:** Classification  
 **Recommended Libraries:**
-- [e.g., pandas, scikit-learn, TensorFlow, Hugging Face]
-
-**Evaluation Metrics:**
-- [e.g., Accuracy, Precision/Recall, RMSE, BLEU score]
+- Gradient-boosted trees, recurrent neural networks, Transformer-based sequence models, logistic regression, random forest, LightGBM, XGBoost, multilayer perceptron, GRU, LSTM, CNN-GRU, SHAP
+**Evaluation Metrics:** The primary metric is AUPRC, with secondary focus on Fraud-class recall and F1-score to balance false-positive rates effectively.
 
 ---
 
 ## 📚 Resources to Get Started
-
 The following resources will help your team understand the problem space and potential technical approaches for this project:
-
 **Background Reading:**
-- [e.g., Link to an article or blog post about the problem domain]
-- [e.g., Link to an industry report or case study]
-
+- Documentation on fraud detection systems and industry standards for PCI compliance.
 **Technical Tutorials:**
-- [e.g., Link to a free tutorial on the ML technique(s) involved]
-- [e.g., Link to documentation for a key library or tool]
-
+- Tutorials on handling high-dimensional time-series data and implementing SHAP for interpretability.
 **Code Examples:**
-- [e.g., Link to a relevant GitHub repo]
-- [e.g., Link to a sample implementation or starter code]
-
-**Other:**
-- [Links to any additional resources — e.g., papers, videos, podcasts, etc.]
-
-*Feel free to explore beyond these, and share anything interesting you find with me!*
+- Sample Jupyter notebooks demonstrating baseline classification pipelines on tabular transaction data.
 
 ---
 
-## 🤝 How We'll Work Together (v2)
-
-**Official check-ins:** During our biweekly 45-minute AI Studio Lab Section meeting block (2nd and 4th week of every month)
-
- **Other ways to reach out to me with questions:** 
-* [e.g., Your team's channel within Break Through Tech’s Discord space]
-* [e.g., Email; please copy your teammates and AI Studio Coach]
-* [e.g., Request a team check-in on Zoom]
-* [Note: I will aim to respond within 48 hours. Please reach out to your AI Studio Coach with urgent questions.]
-
-> 💡 **Challenge Advisor: Please update the above based on your availability and preference. If you are not able to answer questions or meet with fellows outside of the biweekly Lab Section check-ins, simply write in "N/A (only available during the official check-in times)"**
-
-**Recommended free coding / collaboration tools**
-* […]
-* […]
+## 🤝 How We'll Work Together
+**Check-ins:** During our biweekly 60-min AI Studio Lab Section meeting block (2nd and 4th week of every month)  
+**Communication:** Email and scheduled Slack channels.  
+**Response time:** 48 hours for non-urgent technical queries.  
+**Recommended Tools:**
+- **Coding:** Google Colab Free Tier  
+- **Collaboration:** GitHub, Notion  
+- **Virtual Meetings:** Zoom, Google Meet  
 
 ---
 
 ## 🚀 Getting Started
+1. **Review this overview document** and note any questions for our first meeting.
+2. **Begin reviewing the dataset** using the link provided in the Dataset section.
+3. **Read the GitHub Projects documentation** [here](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).
 
-1. **Review this overview document** and note any questions for our first meeting
-2. **Begin reviewing the dataset** using the link above
-3. **Read the GitHub Projects documentation** [here](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects)
-
-I’m excited to work with you!
+I'm excited to work with you!
 
 ---
 
 ## ❓ Questions?
-
-Please bring any questions to our first meeting during the week of August 24th (Break Through Tech’s Bridge to Studio - Session C). 
+Please bring any questions to our first meeting during the week of August 24th (Break Through Tech's Bridge to Studio - Session B).
