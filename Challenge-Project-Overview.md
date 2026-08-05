@@ -42,6 +42,7 @@ The project has a clear application and relevant industry context, encouraging s
 
 **Company / Org:** Mastercard  
 **Challenge Advisor:** Debasmita Das, debasmita.das@iiml.org  
+**AI Studio Coach:** Harshini Donepudi, harshini.donepudi@breakthroughtech.com
 **Program:** Break Through Tech AI Studio - Fall 2026  
 
 ---
