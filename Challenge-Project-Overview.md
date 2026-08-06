@@ -47,30 +47,47 @@ The project has a clear application and relevant industry context, encouraging s
 
 
 ## 🏢 About Mastercard
-Mastercard is a global leader in the payment technology industry, connecting billions of consumers, financial institutions, and merchants through innovative digital transaction solutions. The team objective is to leverage advanced analytics and machine learning to safeguard the global financial ecosystem by proactively identifying and mitigating sophisticated online payment fraud.
+Mastercard is a global leader in the payment technology industry, connecting billions of consumers, financial institutions, and merchants through innovative digital transaction solutions. 
 
 ---
 
 ## 🎯 The Challenge
 ### Project Summary
-This project tasks students with developing a binary classification model to accurately distinguish between fraudulent and legitimate online transactions using high-dimensional data. By applying machine learning and deep learning techniques to the IEEE-CIS dataset, the team will aim to reduce financial losses and minimize customer friction in real-time. The final solution will demonstrate how data-driven insights can streamline manual review workloads for payment processors.
+In this project, you will use online payment transaction data and machine-learning and deep-learning techniques, including gradient-boosted trees, recurrent neural networks, and Transformer-based sequence models, to build a binary classification model that predicts whether an online payment transaction is fraudulent or legitimate. This will help payment companies address payment fraud losses, manual-review workload, customer friction, and the need to detect suspicious transactions accurately and quickly.
+
+The project will use the publicly available IEEE-CIS Fraud Detection dataset, which contains approximately 590,000 transactions and more than 400 transaction, card, identity, device, and behavioral variables. The team will investigate whether information from a transaction’s temporal and behavioral context improves fraud detection compared with models that treat each transaction independently.
 
 ### Success Criteria
-AUPRC (primary), Fraud-class recall, Fraud-class precision, Fraud-class F1-score, False-positive rate, Recall at fixed false-positive rate, and ROC-AUC.
 
+The primary evaluation metrics will be:
+
+- Area under the precision-recall curve, or AUPRC
+- Fraud-class recall
+- Fraud-class precision
+- Fraud-class F1-score
+- False-positive rate
+- Recall at a fixed review rate or fixed false-positive rate
+
+ROC-AUC may be reported as a secondary metric, but AUPRC will be emphasized because it is more informative for highly imbalanced classification.
+
+A successful outcome by December would include:
+
+1. A reproducible data-processing and modelling pipeline.
+2. A strong conventional baseline model.
+3. At least one temporal or deep-learning model evaluated using a chronological split.
+4. Evidence showing whether temporal context improves fraud detection over static transaction features.
+5. An interpretable fraud-risk output that identifies the factors contributing to high-risk predictions.
+6. A demonstration prototype capable of scoring sample transactions.
+7. Clear documentation of model limitations, data leakage risks, and possible deployment considerations.
+   
 ### Project Milestones
 Use these milestones to guide your work. Your team will create a GitHub Projects board to track tasks within each milestone.
 
 | Month | Milestone | Key Activities |
-| :--- | :--- | :--- |
-| September | Data Ingestion, EDA & Preprocessing Pipeline | • Ingest and merge high-dimensional transaction and identity tables from the IEEE-CIS fraud dataset.<br>• Perform Exploratory Data Analysis (EDA) on transaction amounts, device features, and fraud distribution patterns.<br>• Handle missing values, high-cardinality categorical variables, and extreme class imbalance.<br>• Establish baseline evaluation metrics (ROC-AUC, PR-AUC) using baseline classifiers (Logistic Regression / Decision Trees). |
-| October | Advanced Feature Engineering & Fraud Classification | • Engineer domain features including transaction velocity, aggregation metrics across cards/emails, device interactions, and time-delta features.<br>• Train advanced gradient boosting models (LightGBM, XGBoost, CatBoost) optimized for imbalanced tabular data.<br>• Perform hyperparameter tuning, cost-sensitive threshold optimization, and chronological cross-validation. |
-| November / December | Model Explainability, Risk Dashboard & Deliverables | • Apply SHAP (SHapley Additive exPlanations) to identify top risk drivers and explain individual transaction risk scores.<br>• Build an interactive Streamlit application enabling risk analysts to evaluate transaction features and view real-time fraud probability predictions.<br>• Finalize clean, reproducible GitHub repository, technical documentation, and final presentation deck. |
-
-### Stretch Goals
-* **Graph-Based Fraud Network Analysis:** Construct transaction and device entity graphs (using NetworkX or PyTorch Geometric) to identify coordinated fraud rings and shared identity anomalies across accounts.
-* **Real-Time API Endpoint Deployment:** Package the fraud detection model as a low-latency REST API (via FastAPI) to simulate real-time payment transaction scoring and decisioning.
-* **Adaptive Drift & Concept Decay Monitoring:** Implement a drift detection module to monitor shifting fraud patterns over time and evaluate model performance under changing attacker tactics.
+|---|---|---|
+| September | Data understanding, preparation, and baseline development | Review the IEEE-CIS dataset, relevant research papers, and existing fraud-detection approaches. Define the binary target, business objective, assumptions, and evaluation framework. Clean and merge transaction and identity data. Analyze missing values, categorical variables, feature distributions, temporal patterns, and class imbalance. Create a chronological training, validation, and testing strategy.<br><br>Develop initial baseline models, such as logistic regression, random forest, LightGBM, or XGBoost. Establish baseline results using fraud-focused evaluation metrics. |
+| October | Temporal feature engineering and deep-learning development | Create behavioral and temporal features using only information available before each transaction. Examples may include transaction velocity, time since the previous transaction, recent transaction amount statistics, device usage patterns, and changes in customer behavior. Construct transaction sequences where reliable entity or behavioral groupings are available. Develop and compare deep-learning models such as a multilayer perceptron, GRU, LSTM, CNN-GRU, or Transformer.<br><br>Investigate methods for handling class imbalance, including class weighting and focal loss. Perform feature-selection and hyperparameter experiments. Compare static transaction models with temporal or sequential models. |
+| November | Evaluation, explainability, and prototype delivery | Finalize model selection using the chronological validation and test sets. Evaluate model performance across fraud recall, precision, false-positive rate, and operational review volume. Analyze errors and identify fraud cases missed by the model. Apply explainability techniques such as SHAP to identify important transaction and behavioral factors. Test model robustness across different time periods and transaction segments. Build a lightweight dashboard or API prototype that returns a fraud-risk score and supporting explanations. Prepare final technical documentation, presentation, and recommendations for future development. |
 
 > **Note for the team:** Please create a GitHub Projects board in this repository to break these milestones into weekly tasks. Go to the **Projects** tab → **New project** → Choose **Board** → Add columns for each month.
 
@@ -80,52 +97,77 @@ Use these milestones to guide your work. Your team will create a GitHub Projects
 **Name and Source:** IEEE-CIS Fraud Detection Dataset (Kaggle)  
 **Format:** CSV/TSV  
 **Size:** 5gb to 10gb  
-**Location:** Accessible via Kaggle API or direct download.  
+**Location:** https://www.kaggle.com/c/ieee-fraud-detection/data
 
 ### Key Details
-- Publicly available IEEE-CIS Fraud Detection dataset from Kaggle. It contains approximately 590,000 transactions and 400+ variables (card, identity, device, etc.). Data is Numerical/Quantitative and Time Series in CSV/TSV format.
-- Teams must address extreme class imbalance and handle high-cardinality categorical variables while accounting for temporal data drift in the transaction logs.
-
+- [Brief description of what's in the data]
+- [Any known limitations or preprocessing needed]
+- [Link to data dictionary or documentation, if available]
+  
 ---
-
 ## 🛠️ Suggested Approach
-**ML Problem Type:** Classification  
+
+**ML Problem Type:** [e.g., Classification, Regression, NLP, Computer Vision, LLM/RAG]
+
 **Recommended Libraries:**
-- Gradient-boosted trees, recurrent neural networks, Transformer-based sequence models, logistic regression, random forest, LightGBM, XGBoost, multilayer perceptron, GRU, LSTM, CNN-GRU, SHAP
-**Evaluation Metrics:** The primary metric is AUPRC, with secondary focus on Fraud-class recall and F1-score to balance false-positive rates effectively.
+- [e.g., pandas, scikit-learn, TensorFlow, Hugging Face]
+
+**Evaluation Metrics:**
+- [e.g., Accuracy, Precision/Recall, RMSE, BLEU score]
 
 ---
 
 ## 📚 Resources to Get Started
+
 The following resources will help your team understand the problem space and potential technical approaches for this project:
+
 **Background Reading:**
-- Documentation on fraud detection systems and industry standards for PCI compliance.
+- [e.g., Link to an article or blog post about the problem domain]
+- [e.g., Link to an industry report or case study]
+
 **Technical Tutorials:**
-- Tutorials on handling high-dimensional time-series data and implementing SHAP for interpretability.
+- [e.g., Link to a free tutorial on the ML technique(s) involved]
+- [e.g., Link to documentation for a key library or tool]
+
 **Code Examples:**
-- Sample Jupyter notebooks demonstrating baseline classification pipelines on tabular transaction data.
+- [e.g., Link to a relevant GitHub repo]
+- [e.g., Link to a sample implementation or starter code]
+
+**Other:**
+- [Links to any additional resources — e.g., papers, videos, podcasts, etc.]
+
+*Feel free to explore beyond these, and share anything interesting you find with me!*
 
 ---
 
 ## 🤝 How We'll Work Together
-**Check-ins:** During our biweekly 60-min AI Studio Lab Section meeting block (2nd and 4th week of every month)  
-**Communication:** Email and scheduled Slack channels.  
-**Response time:** 48 hours for non-urgent technical queries.  
-**Recommended Tools:**
-- **Coding:** Google Colab Free Tier  
-- **Collaboration:** GitHub, Notion  
-- **Virtual Meetings:** Zoom, Google Meet  
+
+**Official check-ins:** During our biweekly 45-minute AI Studio Lab Section meeting block (2nd and 4th week of every month)
+
+ **Other ways to reach out to me with questions:** 
+* [e.g., Your team's channel within Break Through Tech’s Discord space]
+* [e.g., Email; please copy your teammates and AI Studio Coach]
+* [e.g., Request a team check-in on Zoom]
+* [Note: I will aim to respond within 48 hours. Please reach out to your AI Studio Coach with urgent questions.]
+
+> 💡 **Challenge Advisor: Please update the above based on your availability and preference. If you are not able to answer questions or meet with fellows outside of the biweekly Lab Section check-ins, simply write in "N/A (only available during the official check-in times)"**
+
+**Recommended free coding / collaboration tools**
+* […]
+* […]
 
 ---
 
 ## 🚀 Getting Started
-1. **Review this overview document** and note any questions for our first meeting.
-2. **Begin reviewing the dataset** using the link provided in the Dataset section.
-3. **Read the GitHub Projects documentation** [here](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).
 
-I'm excited to work with you!
+1. **Review this overview document** and note any questions for our first meeting
+2. **Begin reviewing the dataset** using the link above
+3. **Read the GitHub Projects documentation** [here](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects)
+
+I’m excited to work with you!
 
 ---
 
 ## ❓ Questions?
-Please bring any questions to our first meeting during the week of August 24th (Break Through Tech's Bridge to Studio - Session B).
+
+Please bring any questions to our first meeting during the week of August 24th (Break Through Tech’s Bridge to Studio - Session C). 
