@@ -60,12 +60,17 @@ AUPRC (primary), Fraud-class recall, Fraud-class precision, Fraud-class F1-score
 
 ### Project Milestones
 Use these milestones to guide your work. Your team will create a GitHub Projects board to track tasks within each milestone.
+
 | Month | Milestone | Key Activities |
-|-------|-----------|----------------|
-| **September** | Data Exploration & Preprocessing | Conducting exploratory data analysis (EDA), cleaning high-dimensional variables, and identifying anomalies/outliers. |
-| **October** | Feature Engineering & Baseline Modeling | Engineering transaction-based features and deploying standard baselines like Logistic Regression and Random Forest. |
-| **November** | Model Optimization & Evaluation | Tuning hyperparameters, implementing deep learning architectures, and conducting cross-validation assessments. |
-| **December** | Insights, Deliverables & Presentation | Developing interpretable model outputs, building a final prototype dashboard, and packaging the technical documentation. |
+| :--- | :--- | :--- |
+| September | Data Ingestion, EDA & Preprocessing Pipeline | • Ingest and merge high-dimensional transaction and identity tables from the IEEE-CIS fraud dataset.<br>• Perform Exploratory Data Analysis (EDA) on transaction amounts, device features, and fraud distribution patterns.<br>• Handle missing values, high-cardinality categorical variables, and extreme class imbalance.<br>• Establish baseline evaluation metrics (ROC-AUC, PR-AUC) using baseline classifiers (Logistic Regression / Decision Trees). |
+| October | Advanced Feature Engineering & Fraud Classification | • Engineer domain features including transaction velocity, aggregation metrics across cards/emails, device interactions, and time-delta features.<br>• Train advanced gradient boosting models (LightGBM, XGBoost, CatBoost) optimized for imbalanced tabular data.<br>• Perform hyperparameter tuning, cost-sensitive threshold optimization, and chronological cross-validation. |
+| November / December | Model Explainability, Risk Dashboard & Deliverables | • Apply SHAP (SHapley Additive exPlanations) to identify top risk drivers and explain individual transaction risk scores.<br>• Build an interactive Streamlit application enabling risk analysts to evaluate transaction features and view real-time fraud probability predictions.<br>• Finalize clean, reproducible GitHub repository, technical documentation, and final presentation deck. |
+
+### Stretch Goals
+* **Graph-Based Fraud Network Analysis:** Construct transaction and device entity graphs (using NetworkX or PyTorch Geometric) to identify coordinated fraud rings and shared identity anomalies across accounts.
+* **Real-Time API Endpoint Deployment:** Package the fraud detection model as a low-latency REST API (via FastAPI) to simulate real-time payment transaction scoring and decisioning.
+* **Adaptive Drift & Concept Decay Monitoring:** Implement a drift detection module to monitor shifting fraud patterns over time and evaluate model performance under changing attacker tactics.
 
 > **Note for the team:** Please create a GitHub Projects board in this repository to break these milestones into weekly tasks. Go to the **Projects** tab → **New project** → Choose **Board** → Add columns for each month.
 
