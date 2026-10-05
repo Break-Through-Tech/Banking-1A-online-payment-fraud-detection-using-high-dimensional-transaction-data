@@ -1,1 +1,13 @@
+# Data (too large for GitHub; lives in the shared Drive folder)
+data/raw/
+data/processed/
+*.parquet
 
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Local model artifacts
+/models/
