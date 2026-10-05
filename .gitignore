@@ -11,3 +11,7 @@ __pycache__/
 
 # Local model artifacts
 /models/
+
+# Generated reports (rebuild with scripts/run_eda.py and the model --report-dir flag)
+reports/
+catboost_info/

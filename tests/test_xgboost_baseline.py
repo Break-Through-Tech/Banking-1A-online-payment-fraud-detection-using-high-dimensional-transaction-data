@@ -30,7 +30,7 @@ def test_split_days_cover_expected_ranges():
     df = _synthetic()
     split = xb.assign_split(df, split_dir="/nonexistent")
     day = xb.add_day_index(df)
-    assert split.attrs["source"] == "derived:TransactionDT"
+    assert split.attrs["source"] == "derived:chrono-v1"
     assert day[split == "train"].max() <= 121
     assert day[split == "valid"].between(122, 151).all()
     assert day[split == "test"].min() >= 152
@@ -43,7 +43,7 @@ def test_frozen_split_files_take_priority(tmp_path):
     pd.DataFrame({"TransactionID": ids[4000:5000]}).to_csv(tmp_path / "valid_ids.csv", index=False)
     pd.DataFrame({"TransactionID": ids[5000:]}).to_csv(tmp_path / "test_ids.csv", index=False)
     split = xb.assign_split(df, split_dir=tmp_path)
-    assert split.attrs["source"].startswith("frozen:")
+    assert split.attrs["source"].startswith(("chrono-v1-", "frozen:"))
     assert (split == "train").sum() == 4000
 
 

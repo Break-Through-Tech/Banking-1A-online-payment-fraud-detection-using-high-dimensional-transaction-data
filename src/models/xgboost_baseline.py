@@ -121,13 +121,17 @@ def assign_split(df: pd.DataFrame, split_dir: Path | None = None) -> pd.Series:
         for name, f in files.items():
             ids = pd.read_csv(f)[ID_COL]
             split[df[ID_COL].isin(ids)] = name
-        source = f"frozen:{split_dir}"
+        try:
+            from src.split import split_id  # Task #6: same id every model logs
+            source = split_id(split_dir)
+        except ImportError:
+            source = f"frozen:{split_dir}"
     else:
         day = add_day_index(df)
         split = pd.Series("unassigned", index=df.index)
         for name, (lo, hi) in SPLIT_DAYS.items():
             split[(day >= lo) & (day <= hi)] = name
-        source = "derived:TransactionDT"
+        source = "derived:chrono-v1"  # matches src.models.common
 
     split.attrs["source"] = source
     return split
@@ -242,7 +246,7 @@ def log_run(record: dict, registry_path: Path | None = None) -> Path:
     """Append one run to the registry (Task #9). Uses src.registry if merged."""
     try:
         from src.registry import log_run as shared_log_run  # Task #9
-        return shared_log_run(record)
+        return shared_log_run(record, registry_path)
     except ImportError:
         pass
     registry_path = Path(registry_path or REPO_ROOT / "results" / "registry.jsonl")
