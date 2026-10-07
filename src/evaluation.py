@@ -66,7 +66,7 @@ sorted_indices = y_scores.argsort()[::-1]
 top_transactions = sorted_indices[:number_to_review]
 
 # Count fraud cases found
-fraud_found = y_true.iloc[top_transactions].sum()
+fraud_found = y_true[top_transactions].sum()
 total_fraud = y_true.sum()
 
 return fraud_found / total_fraud
