@@ -76,6 +76,13 @@ missing or does not match `scripts/data_manifest.json`.
     from google.colab import userdata
     os.environ["KAGGLE_API_TOKEN"] = userdata.get("KAGGLE_API_TOKEN")
 
+
+
+## Getting the merged dataset
+Download `train_merged_v1.parquet` from the team Google Drive folder into this repo's `data/` folder, then load it as described in `docs/DATA.md`.
+To rebuild it from the raw Kaggle files instead: `python scripts/setup_data.py`, then `python scripts/build_dataset.py` (a few minutes).
+
+
 ## 🏗️ **Project Overview**
 
 **Describe:**
