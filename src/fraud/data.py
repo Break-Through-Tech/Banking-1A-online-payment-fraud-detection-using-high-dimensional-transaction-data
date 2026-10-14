@@ -1,0 +1,1 @@
+"""Data loading. Owner: Leonel. load_data contract comes in Task 2 part B."""

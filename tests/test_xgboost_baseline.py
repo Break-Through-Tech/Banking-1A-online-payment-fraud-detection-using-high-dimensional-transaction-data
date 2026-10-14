@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 
-from src.models import xgboost_baseline as xb
+from fraud.models import xgboost_baseline as xb
 
 
 def _synthetic(n=6000, seed=0):
