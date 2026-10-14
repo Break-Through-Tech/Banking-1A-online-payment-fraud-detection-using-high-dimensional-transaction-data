@@ -39,27 +39,25 @@
 * How to access the dataset(s)
 * How to run the notebook or scripts
 
-** Setup: 
-    1. Clone the repo and open the folder in VS Code.
-    2. Create and activate a venv: python -m venv .venv, then .venv\Scripts\Activate.ps1 (Mac/Linux: source .venv/bin/activate)
-    3. pip install -r requirements.txt then pip install -e .
-    4.Set KAGGLE_API_TOKEN (see .env.example). Python version used: 3.13.5
-**
-** Repo Layout
-    - scripts/ runnable programs (data download, dataset build, split)
-    -src/fraud/ shared importable code
-    - splits/ frozen split ID files (never regenerate)
-    - results/ experiment registry
-    - notebooks/<name>/ personal exploration
-    - tests/ automated checks
-    - docs/ data documentation
-**
+## Setup
+1. Clone the repo and open the folder in VS Code.
+2. Create and activate a venv: `python -m venv .venv`, then `.venv\Scripts\Activate.ps1` (Mac/Linux: `source .venv/bin/activate`).
+3. `pip install -r requirements.txt` then `pip install -e .`
+4. Set `KAGGLE_API_TOKEN` (see `.env.example`). Python version used: 3.13.5
 
-**
-    - No data in the repo. The Parquet file will live in the shared Drive folder
-    - Work on a branch, open a PR, one teammate review before merging.
-    -Shared code lives in src/, not notebooks.
+## Repo layout
+- `scripts/` runnable programs (data download, dataset build, split)
+- `src/fraud/` shared importable code
+- `splits/` frozen split ID files (never regenerate)
+- `results/` experiment registry
+- `notebooks/<name>/` personal exploration
+- `tests/` automated checks
+- `docs/` data documentation
 
+## Team Ettique
+- No data in the repo. The Parquet file will live in the shared Drive folder.
+- Work on a branch, open a PR, one teammate review before merging.
+- Shared code lives in `src/`, not notebooks.
 
 ---
 
