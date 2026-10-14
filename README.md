@@ -61,6 +61,21 @@
 
 ---
 
+
+## Getting the data
+1. Accept the competition rules: https://www.kaggle.com/competitions/ieee-fraud-detection/rules
+2. Generate a token at https://www.kaggle.com/settings/api and set it as KAGGLE_API_TOKEN
+   (Windows: `setx KAGGLE_API_TOKEN "your_token"`, then fully restart VS Code).
+3. Run `python scripts/setup_data.py`
+
+Files land in `data/raw/` (ignored by Git). The script stops with an ERROR if anything is
+missing or does not match `scripts/data_manifest.json`.
+
+**Colab:** add the token in the Secrets panel (key icon) as KAGGLE_API_TOKEN, then run:
+    import os
+    from google.colab import userdata
+    os.environ["KAGGLE_API_TOKEN"] = userdata.get("KAGGLE_API_TOKEN")
+
 ## 🏗️ **Project Overview**
 
 **Describe:**
