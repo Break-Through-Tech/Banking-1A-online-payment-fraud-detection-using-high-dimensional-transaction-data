@@ -5,3 +5,5 @@ scikit-learn>=1.4
 xgboost>=2.1
 scipy>=1.11
 pytest>=8.0
+kaggle>=2.2.4
+ipykernel>=7.4.0
