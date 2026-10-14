@@ -1,15 +1,15 @@
 """
-Reusable categorical encoder for the IEEE-CIS Fraud Detection dataset.
+Leakage-safe categorical encoder for the IEEE-CIS Fraud Detection dataset.
 
-Input can be either:
-1. a pandas DataFrame, or
-2. a path to a CSV file
+This module is intended for models that require explicit numerical
+representations of categorical features, such as linear models and neural
+networks. Tree models with native categorical support may use the same raw
+features without this encoder.
 
-The input dataset should contain the merged raw transaction and identity
-categorical columns.
+The encoder expects a merged transaction + identity pandas DataFrame.
+All data-dependent mappings are learned during fit() and should therefore
+be fitted on the chronological training split only.
 """
-
-from pathlib import Path
 
 import pandas as pd
 from scipy.sparse import csr_matrix, hstack
@@ -20,18 +20,17 @@ class CategoricalEncoder:
     """Encode IEEE-CIS categorical features using training-only mappings."""
 
     def __init__(self):
-
         # Rare-category thresholds selected during exploratory analysis.
         self.transaction_group_cutoffs = {
             "card2": 100,
             "card3": 50,
             "card5": 50,
-            "addr1": 50
+            "addr1": 50,
         }
 
         self.identity_group_cutoffs = {
             "id_17": 50,
-            "DeviceInfo": 50
+            "DeviceInfo": 50,
         }
 
         # High-cardinality features that use frequency encoding.
@@ -42,7 +41,7 @@ class CategoricalEncoder:
             "id_21",
             "id_25",
             "id_26",
-            "id_33"
+            "id_33",
         ]
 
         # Features that use one-hot encoding after grouping.
@@ -62,12 +61,10 @@ class CategoricalEncoder:
             "M7",
             "M8",
             "M9",
-
             "card2_grouped",
             "card3_grouped",
             "card5_grouped",
             "addr1_grouped",
-
             "id_12",
             "id_13",
             "id_14",
@@ -87,14 +84,13 @@ class CategoricalEncoder:
             "id_37",
             "id_38",
             "DeviceType",
-
             "id_17_grouped",
             "id_30_grouped",
             "id_31_grouped",
-            "DeviceInfo_grouped"
+            "DeviceInfo_grouped",
         ]
 
-        # Raw columns the input dataset must contain.
+        # Raw columns the input DataFrame must contain.
         self.required_raw_cols = [
             "ProductCD",
             "card1",
@@ -116,7 +112,6 @@ class CategoricalEncoder:
             "M7",
             "M8",
             "M9",
-
             "id_12",
             "id_13",
             "id_14",
@@ -145,38 +140,30 @@ class CategoricalEncoder:
             "id_37",
             "id_38",
             "DeviceType",
-            "DeviceInfo"
+            "DeviceInfo",
         ]
 
-        # Objects learned only during fit().
+        self._reset_state()
+
+    def _reset_state(self):
+        """Reset objects learned during fit()."""
         self.common_values_ = {}
         self.frequency_maps_ = {}
         self.one_hot_encoder_ = None
         self.is_fitted_ = False
 
-
     def _load_dataset(self, dataset):
-        """Accept either a DataFrame or a CSV filepath."""
+        """Validate and copy an input DataFrame."""
+        if not isinstance(dataset, pd.DataFrame):
+            raise TypeError("dataset must be a pandas DataFrame.")
 
-        if isinstance(dataset, pd.DataFrame):
-            data = dataset.copy()
-
-        elif isinstance(dataset, (str, Path)):
-            data = pd.read_csv(dataset)
-
-        else:
-            raise TypeError(
-                "dataset must be a pandas DataFrame or a CSV filepath."
-            )
-
+        data = dataset.copy()
         self._validate_columns(data)
 
         return data
 
-
     def _validate_columns(self, data):
         """Check that all required raw categorical columns are available."""
-
         missing_cols = [
             col
             for col in self.required_raw_cols
@@ -191,11 +178,18 @@ class CategoricalEncoder:
                   "and identity dataset."
             )
 
+    @staticmethod
+    def _normalize_series(series):
+        """Convert categorical values to consistent strings with explicit missing."""
+        return (
+            series.astype("object")
+            .where(series.notna(), "MISSING")
+            .astype(str)
+        )
 
     @staticmethod
     def _group_os(value):
         """Group operating-system versions into broader families."""
-
         if pd.isna(value):
             return "MISSING"
 
@@ -218,24 +212,25 @@ class CategoricalEncoder:
 
         return "Other"
 
-
     @staticmethod
     def _group_browser(value):
         """Group browser versions into broader browser families."""
-
         if pd.isna(value):
             return "MISSING"
 
         value = str(value).lower()
 
+        if "android webview" in value:
+            return "Android WebView"
+
         if "samsung" in value:
             return "Samsung"
 
-        if "chrome" in value and "chromium" not in value:
-            return "Chrome"
-
         if "chromium" in value:
             return "Chromium"
+
+        if "chrome" in value:
+            return "Chrome"
 
         if "safari" in value:
             return "Safari"
@@ -272,28 +267,23 @@ class CategoricalEncoder:
         if "opera" in value:
             return "Opera"
 
-        if "android webview" in value:
-            return "Android WebView"
-
         return "Other"
-
 
     @staticmethod
     def _group_card6(value):
         """Keep common card6 categories and group rare values."""
-
         if pd.isna(value):
             return "MISSING"
 
-        if value in ["debit", "credit"]:
+        value = str(value).lower()
+
+        if value in {"debit", "credit"}:
             return value
 
         return "OTHER"
 
-
     def _apply_fixed_groups(self, data):
         """Apply grouping rules that do not need to be learned."""
-
         data = data.copy()
 
         data["id_30_grouped"] = (
@@ -310,52 +300,37 @@ class CategoricalEncoder:
 
         return data
 
-
     def fit(self, dataset):
-        """
-        Learn all data-dependent mappings from the training split.
-
-        dataset may be:
-        - a pandas DataFrame
-        - a path to a CSV file
-        """
+        """Learn all data-dependent mappings from the training split."""
+        self._reset_state()
 
         data = self._load_dataset(dataset)
         data = self._apply_fixed_groups(data)
 
         all_cutoffs = {
             **self.transaction_group_cutoffs,
-            **self.identity_group_cutoffs
+            **self.identity_group_cutoffs,
         }
 
         # Learn which categories are common enough to keep.
         for col, cutoff in all_cutoffs.items():
+            values = self._normalize_series(data[col])
 
-            counts = data[col].value_counts(dropna=True)
+            counts = values.value_counts()
 
             self.common_values_[col] = set(
                 counts[counts >= cutoff].index
             )
 
-            data[f"{col}_grouped"] = data[col].apply(
-                lambda x: (
-                    "MISSING"
-                    if pd.isna(x)
-                    else str(x)
-                    if x in self.common_values_[col]
-                    else "OTHER"
-                )
+            data[f"{col}_grouped"] = values.where(
+                values.eq("MISSING")
+                | values.isin(self.common_values_[col]),
+                "OTHER",
             )
 
         # Learn category frequencies from training only.
         for col in self.frequency_cols:
-
-            values = (
-                data[col]
-                .astype("object")
-                .where(data[col].notna(), "MISSING")
-                .astype(str)
-            )
+            values = self._normalize_series(data[col])
 
             self.frequency_maps_[col] = (
                 values
@@ -367,18 +342,14 @@ class CategoricalEncoder:
         one_hot_data = data[self.one_hot_cols].copy()
 
         for col in one_hot_data.columns:
-
-            one_hot_data[col] = (
+            one_hot_data[col] = self._normalize_series(
                 one_hot_data[col]
-                .astype("object")
-                .where(one_hot_data[col].notna(), "MISSING")
-                .astype(str)
             )
 
         # Learn one-hot categories from training only.
         self.one_hot_encoder_ = OneHotEncoder(
             handle_unknown="ignore",
-            sparse_output=True
+            sparse_output=True,
         )
 
         self.one_hot_encoder_.fit(one_hot_data)
@@ -387,14 +358,8 @@ class CategoricalEncoder:
 
         return self
 
-
     def transform(self, dataset):
-        """
-        Encode a dataset using mappings learned during fit().
-
-        This method does not learn or update any mappings.
-        """
-
+        """Encode data using mappings learned during fit()."""
         if not self.is_fitted_:
             raise ValueError(
                 "Encoder must be fitted on training data "
@@ -406,33 +371,24 @@ class CategoricalEncoder:
 
         all_cutoffs = {
             **self.transaction_group_cutoffs,
-            **self.identity_group_cutoffs
+            **self.identity_group_cutoffs,
         }
 
         # Apply rare-category rules learned during fit().
         for col in all_cutoffs:
+            values = self._normalize_series(data[col])
 
-            data[f"{col}_grouped"] = data[col].apply(
-                lambda x: (
-                    "MISSING"
-                    if pd.isna(x)
-                    else str(x)
-                    if x in self.common_values_[col]
-                    else "OTHER"
-                )
+            data[f"{col}_grouped"] = values.where(
+                values.eq("MISSING")
+                | values.isin(self.common_values_[col]),
+                "OTHER",
             )
 
         # Apply training frequency mappings.
         frequency_data = pd.DataFrame(index=data.index)
 
         for col in self.frequency_cols:
-
-            values = (
-                data[col]
-                .astype("object")
-                .where(data[col].notna(), "MISSING")
-                .astype(str)
-            )
+            values = self._normalize_series(data[col])
 
             frequency_data[f"{col}_freq"] = (
                 values
@@ -444,12 +400,8 @@ class CategoricalEncoder:
         one_hot_data = data[self.one_hot_cols].copy()
 
         for col in one_hot_data.columns:
-
-            one_hot_data[col] = (
+            one_hot_data[col] = self._normalize_series(
                 one_hot_data[col]
-                .astype("object")
-                .where(one_hot_data[col].notna(), "MISSING")
-                .astype(str)
             )
 
         # Apply one-hot categories learned during training.
@@ -465,23 +417,17 @@ class CategoricalEncoder:
         # Combine one-hot and frequency features.
         encoded_data = hstack(
             [one_hot_encoded, frequency_encoded],
-            format="csr"
+            format="csr",
         )
 
         return encoded_data
 
-
     def fit_transform(self, dataset):
         """Fit on training data and return its encoded features."""
-
-        self.fit(dataset)
-
-        return self.transform(dataset)
-
+        return self.fit(dataset).transform(dataset)
 
     def get_feature_names(self):
         """Return the names of all encoded categorical features."""
-
         if not self.is_fitted_:
             raise ValueError(
                 "Encoder must be fitted before "
@@ -500,3 +446,7 @@ class CategoricalEncoder:
         ]
 
         return one_hot_names + frequency_names
+
+    def get_feature_names_out(self):
+        """Scikit-learn-style alias for get_feature_names()."""
+        return self.get_feature_names()
