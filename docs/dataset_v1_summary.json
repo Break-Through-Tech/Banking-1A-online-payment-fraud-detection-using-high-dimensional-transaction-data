@@ -1,0 +1,16 @@
+{
+  "file": "train_merged_v1.parquet",
+  "version": "v1",
+  "rows": 590540,
+  "columns": 435,
+  "fraud_rows": 20663,
+  "rows_with_identity": 144233,
+  "memory_gb_before": 1.94,
+  "memory_gb_after": 0.92,
+  "memory_gb_merged": 0.97,
+  "file_size_mb": 84.2,
+  "csv_load_seconds": 15.5,
+  "parquet_load_seconds": 0.5,
+  "built_from_commit": "0ffe892",
+  "pandas_version": "3.0.6"
+}
