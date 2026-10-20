@@ -20,8 +20,8 @@ team plan it stays sealed until November.
 
 Usage
 -----
-    python -m src.models.xgboost_baseline --data data/processed/merged.parquet
-    python -m src.models.xgboost_baseline --raw-dir data/raw --imbalance none
+    python -m fraud.models.xgboost_baseline --data data/processed/merged.parquet
+    python -m fraud.models.xgboost_baseline --raw-dir data/raw --imbalance none
 """
 
 from __future__ import annotations
@@ -188,7 +188,7 @@ def _dollar_capture(y_true, y_score, amount, rates=(0.01, 0.05, 0.10, 0.20)):
 
 
 def fallback_evaluate(y_true, y_score, amount=None, threshold: float = 0.5) -> dict:
-    """Metric set from the Task #7 spec. Replaced by src.evaluation once merged."""
+    """Metric set from the Task #7 spec. Replaced by fraud.evaluation once merged."""
     y_true = np.asarray(y_true).astype(int)
     y_score = np.asarray(y_score, dtype=float)
     y_pred = (y_score >= threshold).astype(int)
@@ -216,7 +216,7 @@ def fallback_evaluate(y_true, y_score, amount=None, threshold: float = 0.5) -> d
 def evaluate(y_true, y_score, amount=None, threshold: float = 0.5) -> dict:
     """Use the shared evaluation module when it exists, else the fallback."""
     try:
-        from src.evaluation import evaluate as shared_evaluate  # Task #7
+        from fraud.evaluation import evaluate as shared_evaluate  # Task #7
     except ImportError:
         return fallback_evaluate(y_true, y_score, amount, threshold)
     try:
@@ -239,9 +239,9 @@ def _git_commit() -> str:
 
 
 def log_run(record: dict, registry_path: Path | None = None) -> Path:
-    """Append one run to the registry (Task #9). Uses src.registry if merged."""
+    """Append one run to the registry (Task #9). Uses fraud.registry if merged."""
     try:
-        from src.registry import log_run as shared_log_run  # Task #9
+        from fraud.registry import log_run as shared_log_run  # Task #9
         return shared_log_run(record)
     except ImportError:
         pass

@@ -1,13 +1,26 @@
 # Data (too large for GitHub; lives in the shared Drive folder)
-data/raw/
-data/processed/
+data/*
+!data/.gitkeep
 *.parquet
+*.zip
+
+#Secrets
+.env
+kaggle.json
 
 # Python
 __pycache__/
 *.pyc
 .pytest_cache/
 .ipynb_checkpoints/
+*.egg-info/
+
+
+# Environments
+.venv*/
 
 # Local model artifacts
 /models/
+
+# Personal scratch notebooks
+notebooks//scratch.ipynb

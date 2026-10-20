@@ -39,7 +39,49 @@
 * How to access the dataset(s)
 * How to run the notebook or scripts
 
+## Setup
+1. Clone the repo and open the folder in VS Code.
+2. Create and activate a venv: `python -m venv .venv`, then `.venv\Scripts\Activate.ps1` (Mac/Linux: `source .venv/bin/activate`).
+3. `pip install -r requirements.txt` then `pip install -e .`
+4. Set `KAGGLE_API_TOKEN` (see `.env.example`). Python version used: 3.13.5
+
+## Repo layout
+- `scripts/` runnable programs (data download, dataset build, split)
+- `src/fraud/` shared importable code
+- `splits/` frozen split ID files (never regenerate)
+- `results/` experiment registry
+- `notebooks/<name>/` personal exploration
+- `tests/` automated checks
+- `docs/` data documentation
+
+## Team Ettique
+- No data in the repo. The Parquet file will live in the shared Drive folder.
+- Work on a branch, open a PR, one teammate review before merging.
+- Shared code lives in `src/`, not notebooks.
+
 ---
+
+
+## Getting the data
+1. Accept the competition rules: https://www.kaggle.com/competitions/ieee-fraud-detection/rules
+2. Generate a token at https://www.kaggle.com/settings/api and set it as KAGGLE_API_TOKEN
+   (Windows: `setx KAGGLE_API_TOKEN "your_token"`, then fully restart VS Code).
+3. Run `python scripts/setup_data.py`
+
+Files land in `data/raw/` (ignored by Git). The script stops with an ERROR if anything is
+missing or does not match `scripts/data_manifest.json`.
+
+**Colab:** add the token in the Secrets panel (key icon) as KAGGLE_API_TOKEN, then run:
+    import os
+    from google.colab import userdata
+    os.environ["KAGGLE_API_TOKEN"] = userdata.get("KAGGLE_API_TOKEN")
+
+
+
+## Getting the merged dataset
+Download `train_merged_v1.parquet` from the team Google Drive folder into this repo's `data/` folder, then load it as described in `docs/DATA.md`.
+To rebuild it from the raw Kaggle files instead: `python scripts/setup_data.py`, then `python scripts/build_dataset.py` (a few minutes).
+
 
 ## 🏗️ **Project Overview**
 
