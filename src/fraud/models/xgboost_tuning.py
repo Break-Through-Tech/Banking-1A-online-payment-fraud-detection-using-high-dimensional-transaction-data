@@ -32,6 +32,8 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -79,7 +81,8 @@ def build_matrices(data_path=None, split_dir=None, sample_rows=150_000, seed=42)
 def suggest_params(trial: optuna.Trial, base_spw: float) -> dict:
     spw_power = trial.suggest_float("spw_power", 0.0, 1.0)  # 0 = no weighting, 1 = full ratio
     return {
-        **{k: v for k, v in xb.DEFAULT_PARAMS.items() if k in ("objective", "eval_metric", "tree_method", "max_bin")},
+        **{k: v for k, v in xb.DEFAULT_PARAMS.items() if k in ("objective", "eval_metric", "tree_method", "max_bin",
+                                                                    "max_cached_hist_node")},
         "learning_rate": TUNING_LR,
         "max_depth": trial.suggest_int("max_depth", 4, 12),
         "min_child_weight": trial.suggest_float("min_child_weight", 0.5, 100, log=True),
@@ -187,6 +190,22 @@ def summarize(study, info, refits, baseline_auprc=None) -> dict:
     }
 
 
+def _refit_command(argv: list[str]) -> list[str]:
+    """Same arguments, but --trials 0 (refit only)."""
+    out, skip = [], False
+    for i, a in enumerate(argv):
+        if skip:
+            skip = False
+            continue
+        if a == "--trials":
+            skip = True
+            continue
+        if a.startswith("--trials="):
+            continue
+        out.append(a)
+    return [sys.executable, "-m", "fraud.models.xgboost_tuning", "--trials", "0", *out]
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description="Optuna sweep for XGBoost (Oct Task #8)")
     p.add_argument("--data", type=Path)
@@ -200,6 +219,7 @@ def main(argv=None):
     p.add_argument("--report-dir", type=Path)
     p.add_argument("--baseline-auprc", type=float, default=0.6637, help="Sept #19 fe_v2 full-train AUPRC")
     p.add_argument("--out", type=Path, default=REPO_ROOT / "results" / "xgboost_optuna_task8.json")
+    p.add_argument("--in-process-refit", action="store_true", help="Refit in this process (small data / tests)")
     args = p.parse_args(argv)
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
@@ -208,10 +228,13 @@ def main(argv=None):
         sampler=optuna.samplers.TPESampler(seed=42, n_startup_trials=12, multivariate=True),
         pruner=optuna.pruners.MedianPruner(n_startup_trials=8, n_warmup_steps=150, interval_steps=1))
 
-    dtr, dva, info = build_matrices(args.data, args.split_dir, args.sample_rows)
-    print(json.dumps(info, indent=2))
-    if study.user_attrs.get("info") is None:
+    if args.trials or study.user_attrs.get("info") is None:
+        dtr, dva, info = build_matrices(args.data, args.split_dir, args.sample_rows)
+        print(json.dumps(info, indent=2))
         study.set_user_attr("info", info)
+    else:
+        dtr = dva = None
+        info = study.user_attrs["info"]  # refit only: skip rebuilding the tuning matrices
     if not study.trials:
         # Trial 0 = the September fe_v2 baseline settings, so tuning must beat it.
         study.enqueue_trial({"max_depth": 8, "min_child_weight": 1.0, "gamma": 1e-3, "subsample": 0.8,
@@ -231,6 +254,14 @@ def main(argv=None):
     params = best_params(study, info["base_spw"])
     print("best params:", json.dumps(params, indent=2))
     seeds = [int(s) for s in args.refit_seeds.split(",") if s]
+    if args.trials and seeds and not args.in_process_refit:
+        # Refit in a fresh process: after a long sweep the heap still holds
+        # the tuning matrices, and the full-data refit was killed for running
+        # out of memory on an 8 GB machine when run in the same process.
+        cmd = _refit_command(argv if argv is not None else sys.argv[1:])
+        print("refitting in a new process:", " ".join(cmd), flush=True)
+        subprocess.run(cmd, check=True)
+        return
     refits = refit(params, seeds, args.data, args.split_dir, args.registry, args.refit_lr, args.report_dir,
                    notes=f"Oct #8 Optuna best trial {study.best_trial.number}; lr {args.refit_lr}") if seeds else []
     summary = summarize(study, info, refits, args.baseline_auprc)

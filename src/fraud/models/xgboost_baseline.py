@@ -75,6 +75,10 @@ DEFAULT_PARAMS = {
     "reg_lambda": 1.0,
     "max_cat_to_onehot": 1,
     "max_bin": 256,
+    # Cap the histogram cache. It doesn't change the model, only memory: deep
+    # trees (depth 10+) otherwise cache one histogram per node and the full-data
+    # fit ran out of memory on an 8 GB machine.
+    "max_cached_hist_node": 256,
 }
 
 from fraud.config import DATA_DIR, PARQUET_PATH, REPO_ROOT, SPLITS_DIR  # noqa: E402
