@@ -2,16 +2,16 @@
 
 Task #23 · Draft by Mohit for the whole team · Status as of October 20, 2026
 
-> **Draft.** Sections marked _owner to fill_ need results from the task owner before the October 31 review. Numbers here come from `results/` on `main` and open branches. Everything is on the frozen validation split (`chrono-v1-c3eab22dc2`); the blind test is still sealed.
+> **Draft.** Sections marked _owner to fill_ need results from the task owner before the October 31 review. Numbers here come from `results/` on `main`. Everything is on the frozen validation split (`chrono-v1-c3eab22dc2`); the blind test is still sealed.
 
 ## 1. Where the models stand
 
 | Model | Task | Owner | Validation AUPRC | Fraud caught, top 5% | Status |
 |---|---|---|---|---|---|
 | **XGBoost, tuned** | #8 | Mohit | **0.682 ± 0.001** (3 seeds) | **71.2%** | Done |
-| LightGBM, tuned | #10 | Orator | 0.668 | 69.8% | In progress (branch `orator/lightgbm-optuna-sweep`) |
+| LightGBM, tuned | #10 | Orator | 0.668 | 69.8% | Done (PR #38) |
 | XGBoost, fe_v2 (Sept #19) | | Mohit | 0.664 | 69.8% | Done |
-| LightGBM, native categorical | #4 | Orator | 0.662 | 69.3% | Done |
+| LightGBM, native categorical | #4 | Orator | 0.662 | 69.3% | Done (PR #36) |
 | CatBoost | #3 / #11 | Faizah | _owner to fill_ | | To-do |
 | Logistic regression / random forest | #5 / #12 | Refilwe | _owner to fill_ | | In progress |
 | **MLP (focal loss)** | #14 | Mohit | **0.536 ± 0.008** (3 seeds) | 60.1% | Done |
@@ -37,7 +37,7 @@ Random guessing scores 0.034. At the 1% review rate every tree model catches abo
 |---|---|---|---|---|
 | 1, 2 | Sept carry-overs: encoding findings, distribution shift | Faizah | _owner to fill_ | |
 | 3, 11, 21 | CatBoost baseline, tuning, rare-category pass | Faizah | _owner to fill_ | |
-| 4, 10 | LightGBM baseline and tuning | Orator | Done / in progress | Tuned 0.668 on Orator's branch |
+| 4, 10 | LightGBM baseline and tuning | Orator | Done | Merged in PRs #36 and #38; tuned 0.668 |
 | 5, 12 | Logistic regression / random forest | Refilwe | _owner to fill_ | Refilwe's evaluation PR is also open |
 | 6 | October issues on the board | Leo | _owner to fill_ | |
 | 7 | Refresh canonical Parquet | Leo | _owner to fill_ | |

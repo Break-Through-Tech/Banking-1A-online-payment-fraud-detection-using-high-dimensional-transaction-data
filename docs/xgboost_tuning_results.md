@@ -55,7 +55,7 @@ What the sweep learned (from the 5 best trials and fANOVA importance):
 - **Dollar capture (seed 42):** top 1% catches 22% of fraud dollars, top 5% 71%, top 10% 82%, top 20% 92%. Task #19 shows how to raise the 1% figure by ranking on expected loss.
 - Training takes 15 minutes per seed on 2 CPU cores and stops on its own at rounds 1,600 to 1,840.
 
-LightGBM numbers are copied from `results/lightgbm_optuna_task10.json` on Orator's branch. That run used the day-based derived split, which selects the same rows as the frozen files, so the comparison is fair.
+LightGBM numbers are from `results/lightgbm_optuna_task10.json` on main (PR #38). That run used the day-based derived split, which selects the same rows as the frozen files, so the comparison is fair.
 
 ## Caveats
 
