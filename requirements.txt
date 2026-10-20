@@ -7,3 +7,4 @@ scipy>=1.11
 pytest>=8.0
 kaggle>=2.2.4
 ipykernel>=7.4.0
+lightgbm>=4.5

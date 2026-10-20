@@ -1,0 +1,35 @@
+{
+  "model": "lightgbm",
+  "task": "#18 baseline",
+  "feature_set": "native_raw_all_v1",
+  "split_id": "derived:TransactionDT",
+  "split_sizes": {
+    "train": 420066,
+    "valid": 85044,
+    "test": 85430
+  },
+  "n_features": 432,
+  "n_numeric": 383,
+  "n_categorical": 49,
+  "imbalance": "scale_pos_weight",
+  "seed": 42,
+  "best_iteration": 4416,
+  "train_seconds": 2871.6,
+  "metrics": {
+    "valid": {
+      "auprc": 0.6620552457417546,
+      "precision": 0.845105,
+      "recall": 0.472954,
+      "f1": 0.606492,
+      "fpr": 0.003043,
+      "recall_at_1pct_review": 0.280513,
+      "recall_at_5pct_review": 0.692788,
+      "ks": 0.729681
+    }
+  },
+  "comparison": {
+    "task11_explicit_encoding_auprc": 0.633808,
+    "native_categorical_auprc": 0.6620552457417546,
+    "selected_baseline": "native categorical LightGBM"
+  }
+}
