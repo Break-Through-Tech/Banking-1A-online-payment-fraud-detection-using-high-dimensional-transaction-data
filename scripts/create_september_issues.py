@@ -35,7 +35,25 @@ MILESTONE_DESC = (
     "Complete data understanding, preparation, and baseline model development "
     "(Milestone #1, Banking 1A)."
 )
-LABEL = "milestone-1"
+# Label scheme: area (what kind of work), priority (P0 = blocks other tasks,
+# P1 = milestone deliverable, P2 = supporting), plus risk flags.
+LABEL_COLORS = {
+    "milestone-1": ("1D76DB", "September milestone tasks"),
+    "priority:P0": ("B60205", "Blocks other tasks; do first"),
+    "priority:P1": ("D93F0B", "Milestone deliverable"),
+    "priority:P2": ("FBCA04", "Supporting work"),
+    "area:data": ("0E8A16", "Download, merge, storage, split"),
+    "area:infra": ("5319E7", "Repo, board, registry, conventions"),
+    "area:eda": ("C2E0C6", "Exploratory analysis"),
+    "area:features": ("BFD4F2", "Encoding and feature engineering"),
+    "area:evaluation": ("006B75", "Metrics, plots, capture tables"),
+    "area:modeling": ("0052CC", "Model training"),
+    "area:docs": ("D4C5F9", "Write-ups and research"),
+    "area:review": ("F9D0C4", "Milestone review and handoff"),
+    "leakage-risk": ("E99695", "Easy to leak future or label information; review carefully"),
+    "gates-october": ("FEF2C0", "Outcome decides October scope"),
+    "reproducibility": ("C5DEF5", "Needed so results can be rebuilt in November"),
+}
 
 # Fill in GitHub usernames so issues get assigned.
 GITHUB_HANDLES = {
@@ -76,13 +94,15 @@ def get_or_create_milestone(dry: bool) -> int | None:
     return created["number"]
 
 
-def ensure_label(dry: bool) -> None:
-    labels = json.loads(gh("api", f"repos/{REPO}/labels?per_page=100"))
-    if any(l["name"] == LABEL for l in labels) or dry:
-        return
-    gh("api", f"repos/{REPO}/labels", "-X", "POST",
-       "-f", f"name={LABEL}", "-f", "color=1D76DB",
-       "-f", "description=September milestone tasks")
+def ensure_labels(needed: set[str], dry: bool) -> None:
+    have = {l["name"] for l in json.loads(gh("api", f"repos/{REPO}/labels?per_page=100"))}
+    for name in sorted(needed - have):
+        color, desc = LABEL_COLORS.get(name, ("EDEDED", ""))
+        if dry:
+            print(f"[dry-run] would create label {name}")
+            continue
+        gh("api", f"repos/{REPO}/labels", "-X", "POST",
+           "-f", f"name={name}", "-f", f"color={color}", "-f", f"description={desc}")
 
 
 def existing_issues() -> dict[int, dict]:
@@ -127,7 +147,7 @@ def main() -> None:
 
     tasks = json.loads(TASKS_FILE.read_text())
     milestone = get_or_create_milestone(dry)
-    ensure_label(dry)
+    ensure_labels({l for t in tasks for l in t["labels"]}, dry)
     have = existing_issues()
 
     project_id = None
@@ -145,15 +165,17 @@ def main() -> None:
         if t["n"] in have:
             url = have[t["n"]]["html_url"]
             print(f"exists   {title} -> {url}")
-            if not dry and milestone:
-                gh("api", f"repos/{REPO}/issues/{have[t['n']]['number']}", "-X", "PATCH",
-                   "-F", f"milestone={milestone}")
+            if not dry:
+                num = have[t["n"]]["number"]
+                if milestone:
+                    gh("api", f"repos/{REPO}/issues/{num}", "-X", "PATCH", "-F", f"milestone={milestone}")
+                gh("issue", "edit", str(num), "--repo", REPO, "--add-label", ",".join(t["labels"]))
         elif dry:
-            print(f"[dry-run] create {title}  assignees={assignees or '-'}  status={t['status']}")
+            print(f"[dry-run] create {title}  status={t['status']}  labels={','.join(t['labels'])}")
             continue
         else:
             cmd = ["issue", "create", "--repo", REPO, "--title", title,
-                   "--body", issue_body(t), "--label", LABEL,
+                   "--body", issue_body(t), "--label", ",".join(t["labels"]),
                    "--milestone", MILESTONE_TITLE]
             for a in assignees:
                 cmd += ["--assignee", a]
