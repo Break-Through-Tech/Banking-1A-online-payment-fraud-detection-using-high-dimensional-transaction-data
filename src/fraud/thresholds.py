@@ -37,6 +37,28 @@ def prior_correct(score, pos_weight: float) -> np.ndarray:
     return s / (s + (1 - s) * pos_weight)
 
 
+def platt_crossfit(score, y, t) -> np.ndarray:
+    """Calibrated probabilities without scoring a row with a fit that saw it.
+
+    Fits p = sigmoid(a * logit(score) + b) on the first half of the window
+    (by transaction time) and applies it to the second half, and vice versa.
+    Platt scaling is monotone, so it never changes the order of scores, only
+    how they compare with dollar amounts.
+    """
+    from sklearn.linear_model import LogisticRegression
+
+    s = np.clip(np.asarray(score, dtype=float), 1e-9, 1 - 1e-9)
+    z = np.log(s / (1 - s)).reshape(-1, 1)
+    y = np.asarray(y).astype(int)
+    t = np.asarray(t)
+    first = t <= np.median(t)
+    out = np.empty(len(s))
+    for fit, apply in ((first, ~first), (~first, first)):
+        lr = LogisticRegression(C=1e6).fit(z[fit], y[fit])
+        out[apply] = lr.predict_proba(z[apply])[:, 1]
+    return out
+
+
 def calibration_table(y, p, bins: int = 10) -> pd.DataFrame:
     """Mean predicted vs observed fraud rate by predicted-probability decile."""
     df = pd.DataFrame({"y": np.asarray(y), "p": np.asarray(p)})

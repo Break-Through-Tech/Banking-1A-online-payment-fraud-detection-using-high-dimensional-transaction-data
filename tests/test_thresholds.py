@@ -48,3 +48,18 @@ def test_sensitivity_and_stability_shapes():
     assert set(stab["window"]) == {"first half", "second half"} and len(stab) == 4
     cal = th.calibration_table(y, p)
     assert len(cal) == 10
+
+
+def test_platt_crossfit_is_monotone_within_halves_and_calibrated():
+    rng = np.random.default_rng(1)
+    n = 20000
+    true_p = rng.beta(0.3, 8, n)
+    y = (rng.random(n) < true_p).astype(int)
+    inflated = true_p * 27 / (true_p * 27 + 1 - true_p)  # like a class-weighted model
+    t = np.arange(n)
+    p = th.platt_crossfit(inflated, y, t)
+    half = t <= np.median(t)
+    for m in (half, ~half):
+        order = np.argsort(inflated[m])
+        assert np.all(np.diff(p[m][order]) >= -1e-12)
+    assert abs(p.mean() - y.mean()) < 0.005

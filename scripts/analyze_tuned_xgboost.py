@@ -78,24 +78,30 @@ def main(argv=None):
         assert np.allclose(np.load(saved), score, atol=1e-5), "rebuilt features do not match the trained model"
 
     # ---------------- Task #19: operating points ----------------
-    p = thresholds.prior_correct(score, spw)
+    # Calibrated probabilities (cross-fitted Platt scaling). The simple prior
+    # correction for scale_pos_weight is kept for comparison only: on our data
+    # it made probabilities far too low.
+    p = thresholds.platt_crossfit(score, y, t)
+    p_prior = thresholds.prior_correct(score, spw)
     days = (t.max() - t.min()) / 86_400
     cal = thresholds.calibration_table(y, p)
     cal.to_csv(out / "calibration.csv")
+    thresholds.calibration_table(y, p_prior).to_csv(out / "calibration_prior_correction.csv")
     ops = thresholds.operating_table(y, p, amt, days=days)
     ops.to_csv(out / "operating_points.csv", index=False)
-    thresholds.cost_sensitivity(y, p, amt).to_csv(out / "cost_sensitivity.csv", index=False)
+    thresholds.cost_sensitivity(y, p, amt, rates=(0.005, 0.01, 0.02, 0.05, 0.10, 0.20, 0.30)).to_csv(
+        out / "cost_sensitivity.csv", index=False)
     thresholds.threshold_stability(y, p, amt, t).to_csv(out / "threshold_stability.csv", index=False)
     thresholds.threshold_stability(y, p, amt, t, strategy="expected_loss").to_csv(
         out / "threshold_stability_expected_loss.csv", index=False)
 
     fig, ax = plt.subplots(figsize=(7.2, 2.8))
-    for strat, color, label in (("score", ORANGE, "Rank by fraud probability"),
-                                ("expected_loss", BLUE, "Rank by probability x amount")):
+    for strat, color, label, dy in (("score", ORANGE, "Rank by fraud probability", -13),
+                                    ("expected_loss", BLUE, "Rank by probability x amount", 6)):
         sub = ops[ops["strategy"] == strat]
         ax.plot(sub["review_rate"] * 100, sub["fraud_dollar_share"] * 100, marker="o", color=color, lw=2, label=label)
         for r, v in zip(sub["review_rate"] * 100, sub["fraud_dollar_share"] * 100):
-            ax.annotate(f"{v:.0f}%", (r, v), textcoords="offset points", xytext=(0, 6), ha="center", fontsize=7.5)
+            ax.annotate(f"{v:.0f}%", (r, v), textcoords="offset points", xytext=(0, dy), ha="center", fontsize=7.5)
     ax.set(xlabel="Share of transactions reviewed (%)", ylabel="Fraud dollars caught (%)", ylim=(0, 100))
     ax.legend(frameon=False, fontsize=8, loc="lower right")
     ax.set_title("Fraud dollars caught at each review budget")
