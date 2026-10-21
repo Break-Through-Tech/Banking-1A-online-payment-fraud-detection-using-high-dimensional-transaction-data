@@ -70,10 +70,22 @@ def load_split(name: str, split_dir: Path | str | None = None) -> pd.Series:
     return pd.read_csv(path)[ID_COL]
 
 
+def canonical_bytes(ids) -> bytes:
+    """The split file's content in one fixed form: header, sorted IDs, LF line endings."""
+    lines = [ID_COL] + [str(int(i)) for i in sorted(ids)]
+    return ("\n".join(lines) + "\n").encode("ascii")
+
+
 def split_id(split_dir: Path | str | None = None) -> str:
-    """Short hash of the three ID files. Logged with every run."""
-    split_dir = Path(split_dir or SPLIT_DIR)
+    """Short hash of the three ID lists. Logged with every run.
+
+    Hashes the TransactionIDs, not the raw file bytes, so the id is the same
+    on every OS: Git on Windows checks the CSVs out with CRLF line endings,
+    which used to give a different id (chrono-v1-d8ea620291). The canonical
+    form matches the committed LF files byte for byte, so the id is unchanged
+    (chrono-v1-c3eab22dc2) and earlier registry records still match.
+    """
     h = hashlib.sha256()
     for name in SPLIT_DAYS:
-        h.update((split_dir / f"{name}_ids.csv").read_bytes())
+        h.update(canonical_bytes(load_split(name, split_dir)))
     return "chrono-v1-" + h.hexdigest()[:10]
