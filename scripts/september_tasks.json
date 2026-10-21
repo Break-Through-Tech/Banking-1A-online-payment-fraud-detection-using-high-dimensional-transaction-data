@@ -1,0 +1,329 @@
+[
+ {
+  "n": 1,
+  "title": "Set up Kaggle access and reproducible download script",
+  "owners": [
+   "Leonel",
+   "All members (account setup)"
+  ],
+  "due": "2026-09-14",
+  "status": "In Progress",
+  "body": "Every member creates a Kaggle account, accepts the IEEE-CIS competition rules, and generates an API token. Leonel writes `scripts/setup_data.py` to pull the files, verify integrity, and fail on a truncated download.",
+  "labels": [
+   "milestone-1",
+   "area:data",
+   "priority:P0",
+   "reproducibility"
+  ]
+ },
+ {
+  "n": 2,
+  "title": "Define repo structure and module contracts",
+  "owners": [
+   "Leonel",
+   "Nicholas"
+  ],
+  "due": "2026-09-15",
+  "status": "In Progress",
+  "body": "Agree on the `src/` layout and the signatures for `load_data`, the feature functions, and `evaluate`, so the pipeline, feature, and evaluation tracks can be built in parallel.",
+  "labels": [
+   "milestone-1",
+   "area:infra",
+   "priority:P0"
+  ]
+ },
+ {
+  "n": 3,
+  "title": "Request GitHub Projects board and create September Issues",
+  "owners": [
+   "Mohit"
+  ],
+  "due": "2026-09-15",
+  "status": "Done",
+  "body": "Ask the AI Studio Coach to create the board, then open an Issue for each task in the September plan, attach it to the September Milestone, and set initial statuses.",
+  "labels": [
+   "milestone-1",
+   "area:infra",
+   "priority:P2"
+  ]
+ },
+ {
+  "n": 4,
+  "title": "Merge transaction and identity tables",
+  "owners": [
+   "Leonel"
+  ],
+  "due": "2026-09-18",
+  "status": "Todo",
+  "body": "Join on `TransactionID`, decide join type, add a `has_identity` flag, and document the null convention. Identity covers only about 144,000 of 590,540 transactions, so missingness is itself informative.",
+  "labels": [
+   "milestone-1",
+   "area:data",
+   "priority:P0"
+  ]
+ },
+ {
+  "n": 5,
+  "title": "Memory-optimize and publish canonical dataset",
+  "owners": [
+   "Leonel"
+  ],
+  "due": "2026-09-20",
+  "status": "Todo",
+  "body": "Downcast numerics, convert categoricals, and write a single Parquet file to the shared Drive folder so every member loads identical data in seconds rather than minutes.",
+  "labels": [
+   "milestone-1",
+   "area:data",
+   "priority:P0",
+   "reproducibility"
+  ]
+ },
+ {
+  "n": 6,
+  "title": "Create and freeze the chronological split",
+  "owners": [
+   "Leonel",
+   "Nicholas"
+  ],
+  "due": "2026-09-21",
+  "status": "Todo",
+  "body": "Derive a day index from `TransactionDT`; split train days 0 to 121, validation 122 to 151, blind test 152 to 182; commit three CSV files of `TransactionID` values with a README. Blind test stays sealed until November.",
+  "labels": [
+   "milestone-1",
+   "area:data",
+   "priority:P0",
+   "leakage-risk"
+  ]
+ },
+ {
+  "n": 7,
+  "title": "Build the shared evaluation module",
+  "owners": [
+   "Refilwe"
+  ],
+  "due": "2026-09-21",
+  "status": "Todo",
+  "body": "One function returning AUPRC, fraud recall, precision, F1, false positive rate, recall at 1% and 5% review rates, and KS. Every model in the project calls this and nobody computes metrics by hand.",
+  "labels": [
+   "milestone-1",
+   "area:evaluation",
+   "priority:P0"
+  ]
+ },
+ {
+  "n": 8,
+  "title": "Missing value analysis across all 434 columns",
+  "owners": [
+   "Faizah"
+  ],
+  "due": "2026-09-21",
+  "status": "Todo",
+  "body": "Quantify missingness by column and column group, and test whether missingness itself correlates with the fraud label.",
+  "labels": [
+   "milestone-1",
+   "area:eda",
+   "priority:P1"
+  ]
+ },
+ {
+  "n": 9,
+  "title": "Stand up the results registry and run conventions",
+  "owners": [
+   "Nicholas"
+  ],
+  "due": "2026-09-23",
+  "status": "Todo",
+  "body": "An append-only log capturing model, feature set version, hyperparameters, split identifier, seed, and the full metric set for every run, so results stay reconstructible in November.",
+  "labels": [
+   "milestone-1",
+   "area:infra",
+   "priority:P1",
+   "reproducibility"
+  ]
+ },
+ {
+  "n": 10,
+  "title": "Categorical cardinality and distribution EDA",
+  "owners": [
+   "Faizah"
+  ],
+  "due": "2026-09-24",
+  "status": "Todo",
+  "body": "Profile ProductCD, card1 through card6, the email domain fields, M1 through M9, DeviceType, and DeviceInfo, and hand the findings to the encoding task.",
+  "labels": [
+   "milestone-1",
+   "area:eda",
+   "priority:P1"
+  ]
+ },
+ {
+  "n": 11,
+  "title": "Define encoding strategy for categorical variables",
+  "owners": [
+   "Orator"
+  ],
+  "due": "2026-09-25",
+  "status": "In Progress",
+  "body": "Choose per-field encoding, including grouping for the high-cardinality DeviceInfo field, and implement it as a reusable module fitted on the training split only.",
+  "labels": [
+   "milestone-1",
+   "area:features",
+   "priority:P1",
+   "leakage-risk"
+  ]
+ },
+ {
+  "n": 12,
+  "title": "Fraud dollar capture table and standard plots",
+  "owners": [
+   "Refilwe"
+  ],
+  "due": "2026-09-26",
+  "status": "Todo",
+  "body": "Rank transactions by predicted risk into top 1%, 5%, 10%, and 20% buckets and report both fraud case share and fraud dollar share. Add shared PR curve, confusion matrix, and score distribution plots.",
+  "labels": [
+   "milestone-1",
+   "area:evaluation",
+   "priority:P2"
+  ]
+ },
+ {
+  "n": 13,
+  "title": "Business objective, assumptions, and evaluation framework write-up",
+  "owners": [
+   "Mohit"
+  ],
+  "due": "2026-09-26",
+  "status": "In Progress",
+  "body": "Document the binary target definition, the cost asymmetry between a false positive and a missed fraud, and the review rate a real fraud operations team could absorb.",
+  "labels": [
+   "milestone-1",
+   "area:docs",
+   "priority:P1"
+  ]
+ },
+ {
+  "n": 14,
+  "title": "Literature and prior approach review",
+  "owners": [
+   "Nicholas",
+   "Mohit"
+  ],
+  "due": "2026-09-26",
+  "status": "In Progress",
+  "body": "Summarize published IEEE-CIS approaches and the leakage traps reported in them, and bring open questions to the biweekly check-in with the Challenge Advisor.",
+  "labels": [
+   "milestone-1",
+   "area:docs",
+   "priority:P2"
+  ]
+ },
+ {
+  "n": 15,
+  "title": "Entity grouping feasibility investigation",
+  "owners": [
+   "Orator"
+  ],
+  "due": "2026-09-28",
+  "status": "Todo",
+  "body": "Determine whether a stable card or user identifier can be built from card1, addr1, and the D columns. The answer decides whether the optional temporal and sequence work in October is possible at all.",
+  "labels": [
+   "milestone-1",
+   "area:features",
+   "priority:P1",
+   "leakage-risk",
+   "gates-october"
+  ]
+ },
+ {
+  "n": 16,
+  "title": "Class imbalance and temporal drift analysis",
+  "owners": [
+   "Faizah"
+  ],
+  "due": "2026-09-28",
+  "status": "Todo",
+  "body": "Visualize the roughly 3.5% fraud rate, then test whether fraud rate and key feature distributions shift across the six-month window. This validates the chronological split and feeds November robustness work.",
+  "labels": [
+   "milestone-1",
+   "area:eda",
+   "priority:P1"
+  ]
+ },
+ {
+  "n": 17,
+  "title": "Baseline: logistic regression and random forest",
+  "owners": [
+   "Refilwe"
+  ],
+  "due": "2026-09-30",
+  "status": "Todo",
+  "body": "First models through the shared pipeline and evaluation module. Sets the performance floor every later model must clear.",
+  "labels": [
+   "milestone-1",
+   "area:modeling",
+   "priority:P1"
+  ]
+ },
+ {
+  "n": 18,
+  "title": "Baseline: LightGBM",
+  "owners": [
+   "Orator"
+  ],
+  "due": "2026-09-30",
+  "status": "Todo",
+  "body": "Gradient boosted baseline on the agreed feature set, logged to the results registry.",
+  "labels": [
+   "milestone-1",
+   "area:modeling",
+   "priority:P1"
+  ]
+ },
+ {
+  "n": 19,
+  "title": "Baseline: XGBoost",
+  "owners": [
+   "Mohit"
+  ],
+  "due": "2026-09-30",
+  "status": "In Progress",
+  "body": "Gradient boosted baseline with class imbalance handling, logged to the results registry.",
+  "labels": [
+   "milestone-1",
+   "area:modeling",
+   "priority:P1"
+  ]
+ },
+ {
+  "n": 20,
+  "title": "Baseline: CatBoost",
+  "owners": [
+   "Faizah"
+  ],
+  "due": "2026-09-30",
+  "status": "Todo",
+  "body": "Gradient boosted baseline using native categorical handling, logged to the results registry.",
+  "labels": [
+   "milestone-1",
+   "area:modeling",
+   "priority:P1"
+  ]
+ },
+ {
+  "n": 21,
+  "title": "Milestone review and October handoff",
+  "owners": [
+   "All members"
+  ],
+  "due": "2026-09-30",
+  "status": "Todo",
+  "body": "Compare all baselines from the registry on identical validation data, agree the strongest configuration, and confirm scope for the October deep learning milestone.",
+  "labels": [
+   "milestone-1",
+   "area:review",
+   "priority:P1",
+   "gates-october"
+  ]
+ }
+]
