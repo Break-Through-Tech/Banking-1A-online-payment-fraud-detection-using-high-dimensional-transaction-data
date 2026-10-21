@@ -64,7 +64,7 @@ def test_end_to_end_trains_and_logs(tmp_path):
     assert "test" not in record["metrics"]  # blind test stays sealed
     assert record["params"]["scale_pos_weight"] > 1
     assert 0 < m["auprc"] <= 1 and m["roc_auc"] > 0.6
-    assert set(m["dollar_capture"]) == {"top1pct", "top5pct", "top10pct", "top20pct"}
+    assert set(m["dollar_capture"]) == {"top_1pct", "top_5pct", "top_10pct", "top_20pct"}
     path = xb.log_run(record, tmp_path / "registry.jsonl")
     assert path.read_text().count("\n") == 1
 

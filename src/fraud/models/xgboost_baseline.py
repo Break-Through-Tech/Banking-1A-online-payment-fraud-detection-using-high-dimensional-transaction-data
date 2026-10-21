@@ -257,9 +257,16 @@ def _dollar_capture(y_true, y_score, amount, rates=(0.01, 0.05, 0.10, 0.20)):
     for r in rates:
         k = max(1, int(np.ceil(r * len(y_score))))
         top = order[:k]
-        out[f"top{int(r * 100)}pct"] = {
-            "fraud_case_share": float(y_true[top].sum() / max(y_true.sum(), 1)),
-            "fraud_dollar_share": float(fraud_amt[top].sum() / max(fraud_amt.sum(), 1e-9)),
+        case_share = float(y_true[top].sum() / max(y_true.sum(), 1))
+        dollar_share = float(fraud_amt[top].sum() / max(fraud_amt.sum(), 1e-9))
+        # Key names match fraud.evaluation (Task #7) so registry records line up.
+        out[f"top_{int(r * 100)}pct"] = {
+            "fraud_cases_captured": int(y_true[top].sum()),
+            "fraud_case_capture_rate": case_share,
+            "fraud_dollars_captured": float(fraud_amt[top].sum()),
+            "fraud_dollar_capture_rate": dollar_share,
+            "fraud_case_share": case_share,      # older name, kept for earlier records
+            "fraud_dollar_share": dollar_share,
         }
     return out
 
