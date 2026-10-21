@@ -24,3 +24,5 @@ __pycache__/
 
 # Personal scratch notebooks
 notebooks//scratch.ipynb
+# Generated reports (rebuild with --report-dir)
+/reports/

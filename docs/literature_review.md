@@ -2,9 +2,9 @@
 
 Task #14 · Milestone 1 (September) · Owners: Nicholas, Mohit
 
-Summary of published IEEE-CIS approaches, the leakage traps reported in them, and what we take from each. Section 5 lists open questions for the biweekly Challenge Advisor check-in.
+Summary of published IEEE-CIS approaches, the leakage traps reported in them, and what we take from each. Section 4 has checks on our own data. Section 6 lists open questions for the biweekly Challenge Advisor check-in.
 
-> Nicholas: sections 1 to 4 are a first pass. Please add anything from your reading, especially academic papers on MLPs or sequence models for October.
+> Nicholas: sections 1 to 5 are a first pass. Please add anything from your reading, especially academic papers on MLPs or sequence models for October.
 
 ## 1. What the top Kaggle solutions did
 
@@ -71,7 +71,27 @@ These are the ones most likely to make our offline numbers look better than they
 4. **Run the time-consistency check** on every feature group before final feature selection.
 5. **Reduce the V columns** by missingness block and correlation. It speeds training and is needed anyway for the MLP.
 
-## 4. Sources
+## 4. Checks on our own data (October 7)
+
+We tested the main claims above on the real training data (420,066 rows) to see whether they hold.
+
+**The 1st-place customer ID works on our data.** For each candidate key, we checked how often the gap in days since the same key's previous transaction matches `D3`. D3 is not used to build any key, so this is an independent test.
+
+| Key | Rows covered | Rows in keys with repeat transactions | D3 matches the gap | Keys where all transactions share one label |
+|---|---|---|---|---|
+| card1 | 100% | 99% | 36% | 85% |
+| card1 + addr1 | 89% | 97% | 42% | 90% |
+| card1 + addr1 + floor(day − D1) | 89% | 78% | **95%** | **98.5%** |
+
+- The full key tracks one client far better than card1 or card1 + addr1. This supports Task #15 going ahead in October.
+- **Label propagation is real.** Among keys with at least one fraud, 55% are fraud on every transaction. That matches Vesta's labeling rule (section 2, trap 8). A model that recognizes a known fraud client will look strong offline.
+- Only 50% of validation rows belong to a key already seen in training. Past-only behavioral features will be missing for about half of transactions, so models must handle "no history".
+
+**Missingness is informative.** Rows missing `addr1`/`addr2` (11.5% of rows) are 4.5 times more likely to be fraud. Rows missing the D, id_ and R_emaildomain blocks are about 3.5 to 5.5 times *less* likely to be fraud. The 339 V columns fall into 14 groups that share the same number of missing rows, which confirms the V reduction approach in section 1.3.
+
+**Feature drift exists.** 20 columns shift a lot between the first and sixth month (PSI > 0.25), including id_31 (browser version), id_13, several V columns from 144 to 166, DeviceInfo and ProductCD. These are the first candidates for the time-consistency check in section 1.2.
+
+## 5. Sources
 
 - Deotte, C. and Yakovlev, K. *1st Place Solution, Part 2*. Kaggle IEEE-CIS Fraud Detection writeups. https://www.kaggle.com/competitions/ieee-fraud-detection/writeups/fraudsquad-1st-place-solution-part-2
 - NVIDIA Technical Blog. *Leveraging Machine Learning to Detect Fraud: Tips to Developing a Winning Kaggle Solution* (UID formula, encodings, month-based validation, scores). https://developer.nvidia.com/blog/leveraging-machine-learning-to-detect-fraud-tips-to-developing-a-winning-kaggle-solution/
@@ -80,7 +100,7 @@ These are the ones most likely to make our offline numbers look better than they
 - Local benchmark of top IEEE-CIS solutions, with a magic UID ablation and causal vs transductive comparison. https://github.com/Edgar100800/ieee-cis-fraud-detection-local-benchmark
 - Mishra, P. *A realistic approach to Kaggle's IEEE-CIS Fraud Detection Challenge* (adversarial validation, avoiding test leakage). https://medium.com/@mr.priyankmishra/a-realistic-approach-to-ieee-cis-fraud-detection-25faea54137
 
-## 5. Open questions for the Challenge Advisor check-in
+## 6. Open questions for the Challenge Advisor check-in
 
 1. Is a reconstructed client ID (card1 + addr1 + D1) acceptable for features if we only use past transactions, or does Mastercard consider any client reconstruction out of scope?
 2. Should transactions from clients already labeled fraud be scored, excluded, or reported separately?
