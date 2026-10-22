@@ -1,2 +1,4 @@
 * text=auto
 *.pdf binary
+# Keep split ID files byte-identical on every OS
+splits/*.csv text eol=lf

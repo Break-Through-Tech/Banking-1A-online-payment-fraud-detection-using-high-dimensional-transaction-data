@@ -1,0 +1,8 @@
+{
+  "scale_pos_weight": 15.6550541,
+  "validation_days": 29.999791666666667,
+  "rows": 85044,
+  "frauds": 2884,
+  "shap_rows": 12925,
+  "flagged_1pct": 851
+}
