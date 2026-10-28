@@ -1,0 +1,70 @@
+{
+  "model": "xgboost",
+  "task": "October Task #8 hyperparameter tuning",
+  "search_method": "Optuna TPE + median pruner",
+  "feature_set": "fe_v2",
+  "split_id": "chrono-v1-c3eab22dc2",
+  "split_sizes": {
+    "train": 420066,
+    "valid": 85044,
+    "test": 85430
+  },
+  "n_features": 445,
+  "n_categorical": 31,
+  "tuning_rows": 150000,
+  "tuning_fraud_rate": 0.03526666666666667,
+  "base_spw": 27.35538752362949,
+  "trials_total": 60,
+  "trials_complete": 32,
+  "trials_pruned": 28,
+  "tuning_learning_rate": 0.1,
+  "best_trial": 32,
+  "best_trial_valid_auprc_on_sample": 0.6089216073162758,
+  "best_params": {
+    "max_depth": 10,
+    "min_child_weight": 0.9193165455212197,
+    "gamma": 0.012604580189207676,
+    "subsample": 0.9626862920230633,
+    "colsample_bytree": 0.43328281639683697,
+    "colsample_bynode": 0.8355643956384933,
+    "reg_lambda": 18.611431415359718,
+    "reg_alpha": 2.7717161270600017,
+    "max_cat_threshold": 17,
+    "scale_pos_weight": 15.655054250601735,
+    "max_cat_to_onehot": 1
+  },
+  "baseline_auprc_full_train": 0.6637,
+  "refit_seeds": [
+    42,
+    43,
+    44
+  ],
+  "refit_valid": {
+    "auprc": {
+      "mean": 0.6817922959016517,
+      "std": 0.00051567357478432
+    },
+    "roc_auc": {
+      "mean": 0.9346958898348384,
+      "std": 0.0007972741355751643
+    },
+    "recall_at_1pct_review": {
+      "mean": 0.28166897827092,
+      "std": 0.0013127388686547089
+    },
+    "recall_at_5pct_review": {
+      "mean": 0.7115117891816922,
+      "std": 0.0015889652201649925
+    },
+    "ks": {
+      "mean": 0.7387696210634639,
+      "std": 0.003757253261351927
+    }
+  },
+  "refit_best_iterations": [
+    1840,
+    1603,
+    1670
+  ],
+  "created_utc": "2026-10-20T19:35:18+00:00"
+}

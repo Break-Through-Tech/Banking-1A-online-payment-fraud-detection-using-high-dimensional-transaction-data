@@ -1,0 +1,13 @@
+family,share,features,meaning
+Vesta features (V),0.24457634320335236,339,"Vesta's engineered counts, rankings and relationships"
+Counts (C),0.16681152900126062,14,"How many addresses, cards or accounts are linked to this payment (velocity)"
+Time deltas (D),0.1529561483885887,15,"Days since earlier events, such as the card's first use"
+Card,0.14355482465575478,10,"Card issuer, type and network, and how common the card group is"
+Address,0.060606778703054635,6,"Billing region and country, and distances between addresses"
+Amount,0.05859805049597691,3,"How much is being spent, and odd amounts (cents pattern)"
+Device / identity,0.05852247498652512,42,"Device, browser, OS and network fingerprint"
+Match checks (M),0.05636436868156598,9,Whether details such as name and address match
+Email,0.03690139764044948,4,Purchaser and recipient email providers
+Time of day,0.01671200892074907,1,Hour the transaction happened
+Product,0.004368248739066303,1,Which product or channel the purchase is for
+Identity present,2.7826583655901317e-05,1,Whether an identity record exists at all

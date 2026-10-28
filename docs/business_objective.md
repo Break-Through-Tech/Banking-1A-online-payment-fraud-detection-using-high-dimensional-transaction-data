@@ -61,17 +61,19 @@ A fraud operations team cannot review every flagged transaction. We assume:
 - **Secondary operating point:** **5%**, representing a larger team or a step-up check (for example, 3-D Secure or an OTP) instead of a manual review.
 - **Customer friction limit:** the false positive rate at the chosen threshold should stay at or below **1%** of legitimate transactions.
 
-At our validation volume (about 30 days and 90,000 to 100,000 transactions), a 1% review rate means about 30 reviews a day. That is a plausible load for a small team and keeps the numbers concrete. These rates are assumptions to be confirmed with the Challenge Advisor.
+Our validation split has 85,044 transactions over 30 days, about 2,835 a day. A 1% review rate means about 28 reviews a day (850 over the month). That is a plausible load for a small team and keeps the numbers concrete. These rates are assumptions to be confirmed with the Challenge Advisor.
 
 ## 5. Evaluation framework
 
 ### 5.1 Data split
 
-| Split | Days (from first `TransactionDT`) | Use |
-|---|---|---|
-| Train | 0 to 121 | Fitting models and any encoders or scalers |
-| Validation | 122 to 151 | Early stopping, model choice, threshold choice |
-| Blind test | 152 to 182 | Sealed until November. Scored once per finalist model |
+| Split | Days (from first `TransactionDT`) | Rows | Fraud rate | Use |
+|---|---|---|---|---|
+| Train | 0 to 121 | 420,066 | 3.52% | Fitting models and any encoders or scalers |
+| Validation | 122 to 151 | 85,044 | 3.39% | Early stopping, model choice, threshold choice |
+| Blind test | 152 to 182 | 85,430 | 3.50% | Sealed until November. Scored once per finalist model |
+
+Row counts and fraud rates are from the real data (computed October 7). The fraud rate is not flat over time: it is 2.5% in the first 30 days and 3.4% to 4.4% after that (chi-square p < 1e-100). That is one more reason not to use a random split.
 
 Rules:
 
