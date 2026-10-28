@@ -1,0 +1,73 @@
+{
+  "model": "catboost",
+  "task": "#20 baseline (issue #25)",
+  "feature_set": "native_raw_all_v1",
+  "split_id": "derived:day-rule",
+  "split_sizes": {
+    "train": 420066,
+    "test": 85430,
+    "valid": 85044
+  },
+  "n_features": 432,
+  "n_categorical": 49,
+  "imbalance": "scale_pos_weight",
+  "seed": 42,
+  "params": {
+    "iterations": 3000,
+    "learning_rate": 0.1,
+    "depth": 6,
+    "scale_pos_weight": 27.41,
+    "early_stopping_rounds": 200
+  },
+  "best_iteration": 1319,
+  "train_seconds": 1310.6,
+  "metrics": {
+    "valid": {
+      "auprc": 0.6257205187448587,
+      "threshold": 0.5,
+      "precision": 0.39987985582699237,
+      "recall": 0.6924410540915396,
+      "f1": 0.5069814673775069,
+      "fpr": 0.03647760467380721,
+      "recall_at_1pct_review": 0.27427184466019416,
+      "recall_at_5pct_review": 0.6650485436893204,
+      "ks": 0.7140053844398198,
+      "confusion": {
+        "tn": 79163,
+        "fp": 2997,
+        "fn": 887,
+        "tp": 1997
+      },
+      "roc_auc": 0.9321424984165398,
+      "dollar_capture": {
+        "top_1pct": {
+          "fraud_dollars_captured": 92396.352,
+          "fraud_dollar_capture_rate": 0.20092915221938443,
+          "fraud_cases_captured": 791,
+          "fraud_case_capture_rate": 0.27427184466019416
+        },
+        "top_5pct": {
+          "fraud_dollars_captured": 264574.21499999997,
+          "fraud_dollar_capture_rate": 0.5753546711352753,
+          "fraud_cases_captured": 1918,
+          "fraud_case_capture_rate": 0.6650485436893204
+        },
+        "top_10pct": {
+          "fraud_dollars_captured": 347491.395,
+          "fraud_dollar_capture_rate": 0.7556700009203962,
+          "fraud_cases_captured": 2253,
+          "fraud_case_capture_rate": 0.7812066574202496
+        },
+        "top_20pct": {
+          "fraud_dollars_captured": 401260.75800000003,
+          "fraud_dollar_capture_rate": 0.8725992117507798,
+          "fraud_cases_captured": 2524,
+          "fraud_case_capture_rate": 0.8751733703190014
+        }
+      }
+    }
+  },
+  "git_commit": "7801d46",
+  "timestamp_utc": "2026-10-28T22:12:36+00:00",
+  "notes": ""
+}

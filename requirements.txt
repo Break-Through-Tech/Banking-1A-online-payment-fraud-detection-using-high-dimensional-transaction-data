@@ -9,3 +9,4 @@ kaggle>=2.2.4
 ipykernel>=7.4.0
 lightgbm>=4.5
 optuna>=5.0
+catboost>=1.2.10
