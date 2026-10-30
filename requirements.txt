@@ -9,6 +9,7 @@ kaggle>=2.2.4
 ipykernel>=7.4.0
 lightgbm>=4.5
 optuna>=5.0
+catboost>=1.2.10
 matplotlib>=3.8
 # CPU-only PyTorch is much smaller: pip install torch --index-url https://download.pytorch.org/whl/cpu
 torch>=2.2

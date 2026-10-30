@@ -148,10 +148,12 @@ def assign_split(df: pd.DataFrame, split_dir: Path | None = None) -> pd.Series:
             from fraud.split import split_id  # Task #6: same id every model logs
             source = split_id(split_dir)
         except ImportError:
-            # Same hash fraud.split.split_id() produces, so runs stay comparable.
+            # Same hash fraud.split.split_id() produces (IDs, not raw bytes,
+            # so CRLF checkouts on Windows give the same id).
             h = hashlib.sha256()
             for name in SPLIT_DAYS:
-                h.update(files[name].read_bytes())
+                ids = sorted(int(i) for i in pd.read_csv(files[name])[ID_COL])
+                h.update(("\n".join([ID_COL] + [str(i) for i in ids]) + "\n").encode("ascii"))
             source = "chrono-v1-" + h.hexdigest()[:10]
     else:
         day = add_day_index(df)
