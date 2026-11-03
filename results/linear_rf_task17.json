@@ -1,0 +1,142 @@
+{
+  "logistic_regression": {
+    "task": "Sept #17 baseline (issue #22)",
+    "feature_set": "freq_encoded_v1",
+    "split_id": "chrono-v1-c3eab22dc2",
+    "split_sizes": {
+      "train": 420066,
+      "valid": 85044
+    },
+    "n_features": 432,
+    "n_categorical": 49,
+    "imbalance": "class_weight=balanced",
+    "seed": 42,
+    "git_commit": "f555268",
+    "notes": "",
+    "model": "logistic_regression",
+    "params": {
+      "max_iter": 1000,
+      "imputation": "train median",
+      "scaling": "standard"
+    },
+    "train_seconds": 47.7,
+    "metrics": {
+      "valid": {
+        "auprc": 0.38320126717584047,
+        "threshold": 0.5,
+        "precision": 0.14894106813996316,
+        "recall": 0.6730235783633842,
+        "f1": 0.24390550389545113,
+        "fpr": 0.1349926971762415,
+        "recall_at_1pct_review": 0.2073509015256588,
+        "recall_at_5pct_review": 0.47156726768377255,
+        "ks": 0.544352449197601,
+        "confusion": {
+          "tn": 71069,
+          "fp": 11091,
+          "fn": 943,
+          "tp": 1941
+        },
+        "roc_auc": 0.8429845983176832,
+        "dollar_capture": {
+          "top_1pct": {
+            "fraud_dollars_captured": 58679.19499999999,
+            "fraud_dollar_capture_rate": 0.1276063464525736,
+            "fraud_cases_captured": 598,
+            "fraud_case_capture_rate": 0.2073509015256588
+          },
+          "top_5pct": {
+            "fraud_dollars_captured": 211620.168,
+            "fraud_dollar_capture_rate": 0.4601984821734489,
+            "fraud_cases_captured": 1360,
+            "fraud_case_capture_rate": 0.47156726768377255
+          },
+          "top_10pct": {
+            "fraud_dollars_captured": 289157.071,
+            "fraud_dollar_capture_rate": 0.6288136260430537,
+            "fraud_cases_captured": 1719,
+            "fraud_case_capture_rate": 0.5960471567267683
+          },
+          "top_20pct": {
+            "fraud_dollars_captured": 351242.877,
+            "fraud_dollar_capture_rate": 0.7638281379194226,
+            "fraud_cases_captured": 2084,
+            "fraud_case_capture_rate": 0.7226074895977809
+          }
+        }
+      }
+    },
+    "timestamp_utc": "2026-11-03T05:03:20+00:00"
+  },
+  "random_forest": {
+    "task": "Sept #17 baseline (issue #22)",
+    "feature_set": "freq_encoded_v1",
+    "split_id": "chrono-v1-c3eab22dc2",
+    "split_sizes": {
+      "train": 420066,
+      "valid": 85044
+    },
+    "n_features": 432,
+    "n_categorical": 49,
+    "imbalance": "class_weight=balanced",
+    "seed": 42,
+    "git_commit": "f555268",
+    "notes": "",
+    "model": "random_forest",
+    "params": {
+      "n_estimators": 300,
+      "max_features": "sqrt",
+      "min_samples_leaf": 50,
+      "max_samples": 0.5,
+      "class_weight": "balanced_subsample"
+    },
+    "train_seconds": 41.6,
+    "metrics": {
+      "valid": {
+        "auprc": 0.4532544812591518,
+        "threshold": 0.5,
+        "precision": 0.2404734035635323,
+        "recall": 0.641123439667129,
+        "f1": 0.3497588196349191,
+        "fpr": 0.07108081791626096,
+        "recall_at_1pct_review": 0.23058252427184467,
+        "recall_at_5pct_review": 0.5287794729542302,
+        "ks": 0.6179049336432278,
+        "confusion": {
+          "tn": 76320,
+          "fp": 5840,
+          "fn": 1035,
+          "tp": 1849
+        },
+        "roc_auc": 0.8954286977846413,
+        "dollar_capture": {
+          "top_1pct": {
+            "fraud_dollars_captured": 56306.042,
+            "fraud_dollar_capture_rate": 0.12244558404090514,
+            "fraud_cases_captured": 665,
+            "fraud_case_capture_rate": 0.23058252427184467
+          },
+          "top_5pct": {
+            "fraud_dollars_captured": 223713.08000000002,
+            "fraud_dollar_capture_rate": 0.48649625804260466,
+            "fraud_cases_captured": 1525,
+            "fraud_case_capture_rate": 0.5287794729542302
+          },
+          "top_10pct": {
+            "fraud_dollars_captured": 308693.47399999993,
+            "fraud_dollar_capture_rate": 0.6712983433207036,
+            "fraud_cases_captured": 1897,
+            "fraud_case_capture_rate": 0.6577669902912622
+          },
+          "top_20pct": {
+            "fraud_dollars_captured": 370469.211,
+            "fraud_dollar_capture_rate": 0.8056385655746913,
+            "fraud_cases_captured": 2273,
+            "fraud_case_capture_rate": 0.7881414701803051
+          }
+        }
+      }
+    },
+    "timestamp_utc": "2026-11-03T05:03:20+00:00"
+  }
+}
