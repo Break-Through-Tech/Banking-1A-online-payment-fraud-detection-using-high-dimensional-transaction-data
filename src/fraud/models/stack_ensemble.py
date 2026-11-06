@@ -12,7 +12,7 @@ The stack is fitted on the first half of the validation window (days 122 to 136)
 and every candidate is compared on the second half (days 137 to 151), so the
 stack is never scored on rows it learned from. The test split is never read.
 
-    python -m fraud.models.ensemble --scores xgb=PATH cat=PATH [lgbm=PATH ...]
+    python -m fraud.models.stack_ensemble --scores xgb=PATH cat=PATH [lgbm=PATH ...]
 
 Each PATH is either a .parquet file with TransactionID and score columns, or a
 .npy array of validation scores in TransactionID order (how Mohit's scripts save).
