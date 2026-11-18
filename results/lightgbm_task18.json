@@ -2,7 +2,7 @@
   "model": "lightgbm",
   "task": "#18 baseline",
   "feature_set": "native_raw_all_v1",
-  "split_id": "derived:TransactionDT",
+  "split_id": "chrono-v1-c3eab22dc2",
   "split_sizes": {
     "train": 420066,
     "valid": 85044,

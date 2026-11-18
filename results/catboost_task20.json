@@ -2,7 +2,7 @@
   "model": "catboost",
   "task": "#20 baseline (issue #25)",
   "feature_set": "native_raw_all_v1",
-  "split_id": "derived:day-rule",
+  "split_id": "chrono-v1-c3eab22dc2",
   "split_sizes": {
     "train": 420066,
     "test": 85430,
@@ -69,5 +69,5 @@
   },
   "git_commit": "7801d46",
   "timestamp_utc": "2026-10-28T22:12:36+00:00",
-  "notes": ""
+  "notes": "split_id corrected from derived:day-rule after ID-set check (Nov Task 6, #67)"
 }
