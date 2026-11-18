@@ -31,3 +31,10 @@
 - After Task 6, use load_data("train") and load_data("val") instead.
 
 - v1, built 10/14: first build
+
+## Score files
+- Saved model scores use one format: a Parquet file with two columns, TransactionID and score, one row per scored transaction.
+- Write them with fraud.scores.save_scores(ids, scores, path). Read them back with fraud.scores.load_scores(path, expected_ids), which lines scores up by TransactionID and raises an error if any expected row has no score.
+- Every final candidate saves its validation scores this way, and its blind test scores once Nov Task 14 runs. Score files live under reports/, which git ignores.
+- Older .npy score files (XGBoost, MLP, FT-Transformer) hold no IDs. They are validation scores in ascending TransactionID order.
+- python scripts/check_split_consistency.py confirms the frozen split files match the day rule and that every saved score file covers exactly the validation rows (Nov Task 6). On Nov 18 all checks passed, so runs logged with a derived split id used the same rows.
